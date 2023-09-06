@@ -16,15 +16,15 @@ spec:
         show: false
         text: >-
           It's time to get your Dev on!
-    database:
-      credentialsSecretName: postgres-credentials
-      externalDb: false
-      postgresDb: devspaces
-      # BUG: can not change postgresHostNamae
-      postgresHostName: postgres
-      postgresPort: '5432'
-      pvc:
-        claimSize: 1Gi
+    # database:
+    #   credentialsSecretName: postgres-credentials
+    #   externalDb: false
+    #   postgresDb: devspaces
+    #   # BUG: can not change postgresHostNamae
+    #   postgresHostName: postgres
+    #   postgresPort: '5432'
+    #   pvc:
+    #     claimSize: 1Gi
     devfileRegistry:
       # deployment:
       #   containers:
