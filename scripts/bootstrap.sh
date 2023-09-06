@@ -128,17 +128,17 @@ YAML
 setup_demo(){
   # setup nfd operator
   oc apply -k components/operators/nfd/operator/overlays/stable
-  wait_for_crd NodeFeatureDiscovery
+  wait_for_crd nodefeaturediscoveries.nfd.openshift.io
   oc apply -k components/operators/nfd/instance/overlays/default
 
   # setup nvidia gpu operator
   oc apply -k components/operators/gpu-operator-certified/operator/overlays/stable
-  wait_for_crd ClusterPolicy
+  wait_for_crd clusterpolicies.nvidia.com
   oc apply -k components/operators/gpu-operator-certified/instance/overlays/default
 
   # setup devspaces
   oc apply -k components/operators/devspaces/operator/overlays/stable
-  wait_for_crd CheCluster
+  wait_for_crd checlusters.org.eclipse.che
   oc apply -k components/operators/devspaces/instance/overlays/default
 
   # setup cluster autoscaling
