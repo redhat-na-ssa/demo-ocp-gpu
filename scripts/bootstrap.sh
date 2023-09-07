@@ -125,28 +125,41 @@ YAML
   done
 }
 
-setup_demo(){
-  # setup nfd operator
-  oc apply -k components/operators/nfd/operator/overlays/stable
-  wait_for_crd nodefeaturediscoveries.nfd.openshift.io
-  oc apply -k components/operators/nfd/instance/overlays/default
-
-  # setup nvidia gpu operator
-  oc apply -k components/operators/gpu-operator-certified/operator/overlays/stable
-  wait_for_crd clusterpolicies.nvidia.com
-  oc apply -k components/operators/gpu-operator-certified/instance/overlays/default
-
-  # setup devspaces
-  oc apply -k components/operators/devspaces/operator/overlays/stable
-  wait_for_crd checlusters.org.eclipse.che
-  oc apply -k components/operators/devspaces/instance/overlays/default
-
+setup_cluster_autoscaling(){
   # setup cluster autoscaling
   oc apply -k components/configs/autoscale/overlays/default
 
   aws_create_gpu_machineset
   ocp_create_machineset_autoscale
 }
+
+setup_operator_devspaces(){
+  # setup devspaces
+  oc apply -k components/operators/devspaces/operator/overlays/stable
+  wait_for_crd checlusters.org.eclipse.che
+  oc apply -k components/operators/devspaces/instance/overlays/default
+}
+
+setup_operator_nfd(){
+  # setup nfd operator
+  oc apply -k components/operators/nfd/operator/overlays/stable
+  wait_for_crd nodefeaturediscoveries.nfd.openshift.io
+  oc apply -k components/operators/nfd/instance/overlays/default
+}
+
+setup_operator_nvidia(){
+  # setup nvidia gpu operator
+  oc apply -k components/operators/gpu-operator-certified/operator/overlays/stable
+  wait_for_crd clusterpolicies.nvidia.com
+  oc apply -k components/operators/gpu-operator-certified/instance/overlays/default
+}
+
+setup_demo(){
+  setup_operator_nfd
+  setup_operator_nvidia
+}
+
+is_sourced && exit 0
 
 check_oc
 check_oc_login
