@@ -159,7 +159,7 @@ setup_demo(){
   setup_operator_nvidia
 }
 
-is_sourced && exit 0
+is_sourced && return 0
 
 check_oc
 check_oc_login
