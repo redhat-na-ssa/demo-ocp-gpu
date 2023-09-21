@@ -166,8 +166,8 @@ setup_namespaces(){
 
 check_cluster_version(){
   OCP_VERSION=$(oc version | sed -n '/Server Version: / s/Server Version: //p')
-  AVOID_VERSIONS=("4.12.12")
-  TESTED_VERSIONS=("4.12.32" "4.12.33")
+  AVOID_VERSIONS=()
+  TESTED_VERSIONS=("4.12.33")
 
   echo "Current OCP version: ${OCP_VERSION}"
   echo "Tested OCP version(s): ${TESTED_VERSIONS[*]}"
@@ -184,11 +184,8 @@ check_cluster_version(){
 
 setup_demo(){
   check_cluster_version
-  setup_namespaces
-  setup_operator_pipelines
   setup_operator_nfd
   setup_operator_nvidia
-  setup_operator_devspaces
   usage
 }
 
