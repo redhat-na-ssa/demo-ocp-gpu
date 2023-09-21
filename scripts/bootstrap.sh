@@ -1,11 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC2015,SC1091
 
-COMPLETION_PATH=scratch
-BIN_PATH=${COMPLETION_PATH}/bin
-SEALED_SECRETS_FOLDER=components/operators/sealed-secrets/operator/overlays/default
-SEALED_SECRETS_SECRET=bootstrap/base/sealed-secrets-secret.yaml
-
 debug(){
 echo "PWD:  $(pwd)"
 echo "PATH: ${PATH}"
@@ -79,7 +74,10 @@ aws_create_gpu_machineset(){
   # single gpu: g4dn.{2,4,8,16}xlarge
   # multi gpu: g4dn.12xlarge
   # cheapest: g4ad.4xlarge
-  INSTANCE_TYPE=${1:-g4dn.4xlarge}
+  # a100 (MIG): p4d.24xlarge
+  # h100 (MIG): p5.48xlarge
+  # INSTANCE_TYPE=${1:-g4dn.4xlarge}
+  INSTANCE_TYPE=${1:-p4d.24xlarge}
   MACHINE_SET=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep worker | head -n1)
 
   oc -n openshift-machine-api get "${MACHINE_SET}" -o yaml | \
