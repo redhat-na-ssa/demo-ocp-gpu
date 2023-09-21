@@ -3,8 +3,6 @@
 
 COMPLETION_PATH=scratch
 BIN_PATH=${COMPLETION_PATH}/bin
-SEALED_SECRETS_FOLDER=components/operators/sealed-secrets/operator/overlays/default
-SEALED_SECRETS_SECRET=bootstrap/base/sealed-secrets-secret.yaml
 
 debug(){
 echo "PWD:  $(pwd)"
