@@ -25,6 +25,8 @@ oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/g
 
 ## Links
 
+- [AWS GPU Instances](https://aws.amazon.com/ec2/instance-types/#Accelerated_Computing)
+- https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/time-slicing-gpus-in-openshift.html
 - https://cloud.redhat.com/blog/autoscaling-nvidia-gpus-on-red-hat-openshift
 - https://github.com/bkoz/devspaces
 
