@@ -13,7 +13,7 @@ check_shell(){
 #   return
 # }
 
-check_shell
+# check_shell
 
 
 debug(){
