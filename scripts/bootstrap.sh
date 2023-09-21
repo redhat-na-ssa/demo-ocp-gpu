@@ -6,6 +6,7 @@ set -e
 check_shell(){
   [ "${SHELL}" = "/bin/bash" ] && return
   echo "Please verify you are running this script in bash shell"
+  exit 0
 }
 
 # check_tkn(){
