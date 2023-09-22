@@ -15,7 +15,7 @@ This repo is intended to help setup GPU prerequisites for other demos.
 # setup operators
 scripts/bootstrap.sh
 
-# setup autoscaling in aws (skip for bare metal)
+# skip on bare metal - setup autoscaling in aws
 . scripts/bootstrap.sh
 setup_cluster_autoscaling
 
