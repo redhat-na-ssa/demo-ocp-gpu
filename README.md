@@ -32,7 +32,7 @@ oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/g
 
 ## TODO
 
-- [ ] Document offline install of Nvidia GPU Operator
 - [ ] Create Nvidia GPU time-slicing config
 - [ ] Create Nvidia GPU MIG config
 - [ ] Setup OpenShift console plugin for Nvidia 
+- [ ] Document offline install of Nvidia GPU Operator
