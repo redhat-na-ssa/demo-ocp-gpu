@@ -4,9 +4,9 @@
 set -e
 
 check_shell(){
-  [[ "${0}" =~ "bash" ]] && return
+  [ -n "$BASH_VERSION" ] && return
   echo "Please verify you are running in bash shell"
-  sleep 100
+  sleep 10
 }
 
 # check_tkn(){
