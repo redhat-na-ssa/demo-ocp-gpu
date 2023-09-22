@@ -125,6 +125,14 @@ ocp_scale_all_machineset(){
 
 }
 
+setup_dashboard_nvidia(){
+  curl -LfO https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json
+  oc create configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed --from-file=dcgm-exporter-dashboard.json
+  oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/dashboard=true"
+  oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/odc-dashboard=true"
+  oc -n openshift-config-managed get cm nvidia-dcgm-exporter-dashboard --show-labels
+}
+
 setup_aws_cluster_autoscaling(){
   # setup cluster autoscaling
   oc apply -k components/configs/autoscale/overlays/gpus
@@ -187,6 +195,7 @@ setup_demo(){
   check_cluster_version
   setup_operator_nfd
   setup_operator_nvidia
+  setup_dashboard_nvidia
   usage
 }
 
