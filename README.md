@@ -37,3 +37,4 @@ oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/g
 - [ ] Create Nvidia GPU MIG config
 - [x] Setup OpenShift console plugins for Nvidia 
 - [ ] Document offline install of Nvidia GPU Operator
+- [ ] Make bash functions kustomization
