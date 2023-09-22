@@ -15,7 +15,7 @@ This repo is intended to help setup GPU prerequisites for other demos.
 # setup operators
 scripts/bootstrap.sh
 
-# setup autoscaling in aws
+# setup autoscaling in aws (skip for bare metal)
 . scripts/bootstrap.sh
 setup_cluster_autoscaling
 
@@ -33,3 +33,6 @@ oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/g
 ## TODO
 
 - [ ] Document offline install of Nvidia GPU Operator
+- [ ] Create Nvidia GPU time-slicing config
+- [ ] Create Nvidia GPU MIG config
+- [ ] Setup OpenShift console plugin for Nvidia 
