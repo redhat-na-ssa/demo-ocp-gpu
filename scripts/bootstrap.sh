@@ -125,12 +125,24 @@ ocp_scale_all_machineset(){
 
 }
 
-setup_dashboard_nvidia(){
-  curl -LfO https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json
-  oc create configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed --from-file=dcgm-exporter-dashboard.json
-  oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/dashboard=true"
-  oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/odc-dashboard=true"
+setup_dashboard_nvidia_monitor(){
+  curl -sLfO https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json
+  oc create configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed --from-file=dcgm-exporter-dashboard.json || true
+  oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/dashboard=true" --overwrite
+  oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/odc-dashboard=true" --overwrite
   oc -n openshift-config-managed get cm nvidia-dcgm-exporter-dashboard --show-labels
+}
+
+setup_dashboard_nvidia_admin(){
+  helm repo add rh-ecosystem-edge https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu
+  helm repo update
+  helm install -n nvidia-gpu-operator console-plugin-nvidia-gpu rh-ecosystem-edge/console-plugin-nvidia-gpu
+
+  oc get consoles.operator.openshift.io cluster --output=jsonpath="{.spec.plugins}"
+  oc patch consoles.operator.openshift.io cluster --patch '{ "spec": { "plugins": ["console-plugin-nvidia-gpu"] } }' --type=merge
+  oc patch consoles.operator.openshift.io cluster --patch '[{"op": "add", "path": "/spec/plugins/-", "value": "console-plugin-nvidia-gpu" }]' --type=json
+  oc patch clusterpolicies.nvidia.com gpu-cluster-policy --patch '{ "spec": { "dcgmExporter": { "config": { "name": "console-plugin-nvidia-gpu" } } } }' --type=merge
+  oc -n nvidia-gpu-operator get all -l app.kubernetes.io/name=console-plugin-nvidia-gpu
 }
 
 setup_aws_cluster_autoscaling(){
@@ -195,7 +207,8 @@ setup_demo(){
   check_cluster_version
   setup_operator_nfd
   setup_operator_nvidia
-  setup_dashboard_nvidia
+  setup_dashboard_nvidia_monitor
+  setup_dashboard_nvidia_admin
   usage
 }
 
