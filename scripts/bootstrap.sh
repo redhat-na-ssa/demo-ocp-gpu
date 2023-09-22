@@ -176,7 +176,7 @@ setup_operator_nfd(){
   # setup nfd operator
   oc apply -k components/operators/nfd/operator/overlays/stable
   wait_for_crd nodefeaturediscoveries.nfd.openshift.io
-  oc apply -k components/operators/nfd/instance/overlays/default
+  oc apply -k components/operators/nfd/instance/overlays/only-nvidia
 }
 
 setup_operator_nvidia(){
