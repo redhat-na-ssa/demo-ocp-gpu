@@ -3,23 +3,35 @@
 
 set -e
 
+#!/bin/bash
+set -e
+
 check_shell(){
   [ -n "$BASH_VERSION" ] && return
   echo "Please verify you are running in bash shell"
   sleep 10
 }
 
-# check_tkn(){
-#   return
-# }
-
-# check_shell
-
-
-debug(){
-echo "PWD:  $(pwd)"
-echo "PATH: ${PATH}"
+check_git_root(){
+  if [ -d .git ] && [ -d scripts ]; then
+    GIT_ROOT=$(pwd)
+    export GIT_ROOT
+    echo "GIT_ROOT: ${GIT_ROOT}"
+  else
+    echo "Please run this script from the root of the git repo"
+    exit
+  fi
 }
+
+get_script_path(){
+  SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+  echo "SCRIPT_DIR: ${SCRIPT_DIR}"
+}
+
+
+check_shell
+check_git_root
+get_script_path
 
 usage(){
   echo "
