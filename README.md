@@ -27,6 +27,7 @@ oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/g
 
 - [Docs - AWS GPU Instances](https://aws.amazon.com/ec2/instance-types/#Accelerated_Computing)
 - [Docs - Nvidia GPU Operator on Openshift](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/contents.html)
+- [Docs - Nvidia GPU admin dashboard](https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html)
 - [Blog - RH Nvidia GPUs on OpenShift](https://cloud.redhat.com/blog/autoscaling-nvidia-gpus-on-red-hat-openshift)
 - [Demo - GPU DevSpaces](https://github.com/bkoz/devspaces)
 
@@ -34,5 +35,5 @@ oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/g
 
 - [ ] Create Nvidia GPU time-slicing config
 - [ ] Create Nvidia GPU MIG config
-- [ ] Setup OpenShift console plugin for Nvidia 
+- [x] Setup OpenShift console plugins for Nvidia 
 - [ ] Document offline install of Nvidia GPU Operator
