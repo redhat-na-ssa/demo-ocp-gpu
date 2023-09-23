@@ -146,9 +146,9 @@ setup_dashboard_nvidia_monitor(){
 }
 
 setup_dashboard_nvidia_admin(){
-  helm repo add rh-ecosystem-edge https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu
+  helm repo add rh-ecosystem-edge https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu || true
   helm repo update
-  helm install -n nvidia-gpu-operator console-plugin-nvidia-gpu rh-ecosystem-edge/console-plugin-nvidia-gpu
+  helm upgrade -n nvidia-gpu-operator console-plugin-nvidia-gpu rh-ecosystem-edge/console-plugin-nvidia-gpu
 
   oc get consoles.operator.openshift.io cluster --output=jsonpath="{.spec.plugins}"
   oc patch consoles.operator.openshift.io cluster --patch '{ "spec": { "plugins": ["console-plugin-nvidia-gpu"] } }' --type=merge
