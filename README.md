@@ -17,7 +17,13 @@ scripts/bootstrap.sh
 
 # skip on bare metal - setup autoscaling in aws
 . scripts/bootstrap.sh
+
+# aws gpu - basic
 setup_aws_cluster_autoscaling
+
+# aws gpu - mig
+setup_aws_cluster_autoscaling p4d.24xlarge
+setup_mig_config_nvidia single all-1g.5gb
 
 # deploy gpu test pod
 oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml

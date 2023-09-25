@@ -174,7 +174,8 @@ setup_aws_cluster_autoscaling(){
   # setup cluster autoscaling
   oc apply -k components/configs/autoscale/overlays/gpus
 
-  ocp_aws_create_gpu_machineset p4d.24xlarge
+  ${1:-p4d.24xlarge}
+  ocp_aws_create_gpu_machineset "${INSTANCE_TYPE}"
   ocp_create_machineset_autoscale
 }
 
