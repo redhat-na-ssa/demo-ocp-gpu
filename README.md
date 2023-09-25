@@ -41,11 +41,13 @@ Setup MIG profile
 ```
 . scripts/bootstrap.sh
 
-# setup MIG single - ex: nvidia.com/gpu: 1
+# setup MIG single
+# ex: nvidia.com/gpu: 1
 setup_mig_config_nvidia single all-1g.5gb
 setup_mig_config_nvidia single all-2g.10gb
 
-# setup MIG mixed - ex: nvidia.com/mig-2g.10gb: 1
+# setup MIG mixed
+# ex: nvidia.com/mig-2g.10gb: 1
 setup_mig_config_nvidia mixed all-balanced
 ```
 
