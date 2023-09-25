@@ -1,11 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC2015,SC1091,SC2119,SC2120
 
-set -e
-
-#!/bin/bash
-set -e
-
 check_shell(){
   [ -n "$BASH_VERSION" ] && return
   echo "Please verify you are running in bash shell"
