@@ -161,8 +161,7 @@ setup_mig_config_nvidia(){
   MIG_MODE=${1:-single}
   MIG_CONFIG=${1:-all-1g.5gb}
 
-  # MIG_MODE=${1:-mixed}
-  # MIG_CONFIG=${1:-all-balanced}
+  oc apply -k components/operators/gpu-operator-certified/instance/overlays/mig-"${MIG_MODE}"
 
   oc label node \
     -l node-role.kubernetes.io/gpu \

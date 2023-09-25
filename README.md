@@ -33,6 +33,8 @@ Get GPU nodes
 
 ```
 oc get nodes -l node-role.kubernetes.io/gpu
+
+oc get node -ojsonpath={[*].status.allocatable} | jq . | grep nvidia
 ```
 
 Manually label nodes as GPU
