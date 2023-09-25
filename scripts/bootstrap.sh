@@ -1,5 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC2015,SC1091,SC2119,SC2120
+set -e
 
 check_shell(){
   [ -n "$BASH_VERSION" ] && return
