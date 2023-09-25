@@ -23,13 +23,35 @@ setup_cluster_autoscaling
 oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml
 ```
 
+Label nodes as GPU
+
+```
+NODE=worker1.ocp.run
+  oc label node/${NODE} --overwrite "node-role.kubernetes.io/gpu="
+```
+
+Apply MIG partitioning profile(s)
+
+```
+MIG_CONFIG=all-1g.5gb
+  oc label node/${NODE} --overwrite "nvidia.com/mig.config=${MIG_CONFIG}"
+
+MIG_CONFIG=all-2g.10gb
+  oc label node/${NODE} --overwrite "nvidia.com/mig.config=${MIG_CONFIG}"
+
+MIG_CONFIG=all-balanced
+  oc label node/${NODE} --overwrite "nvidia.com/mig.config=${MIG_CONFIG}"
+```
+
 ## Links
 
 - [Docs - AWS GPU Instances](https://aws.amazon.com/ec2/instance-types/#Accelerated_Computing)
 - [Docs - Nvidia GPU Operator on Openshift](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/contents.html)
 - [Docs - Nvidia GPU admin dashboard](https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html)
+- [Docs - MIG support in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/mig-ocp.html)
 - [Blog - RH Nvidia GPUs on OpenShift](https://cloud.redhat.com/blog/autoscaling-nvidia-gpus-on-red-hat-openshift)
 - [Demo - GPU DevSpaces](https://github.com/bkoz/devspaces)
+- [GPU Operator default config map](https://gitlab.com/nvidia/kubernetes/gpu-operator/-/blob/v23.6.1/assets/state-mig-manager/0400_configmap.yaml?ref_type=tags)
 
 ## TODO
 
