@@ -15,18 +15,20 @@ This repo is intended to help setup GPU prerequisites for other demos.
 # setup operators
 scripts/bootstrap.sh
 
-# skip on bare metal - setup autoscaling in aws
+# aws gpu - load functions
 . scripts/bootstrap.sh
 
-# aws gpu - basic
+# aws gpu - basic autoscaling
 setup_aws_cluster_autoscaling
-
-# aws gpu - mig
-setup_aws_cluster_autoscaling p4d.24xlarge
-setup_mig_config_nvidia single all-1g.5gb
 
 # deploy gpu test pod
 oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml
+```
+
+AWS Setup Time Slicing
+
+```
+oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing
 ```
 
 Get GPU nodes
@@ -34,8 +36,14 @@ Get GPU nodes
 ```
 oc get nodes -l node-role.kubernetes.io/gpu
 
-oc get node -ojsonpath={[*].status.allocatable} | jq . | grep nvidia
+oc get nodes \
+  -l node-role.kubernetes.io/gpu \
+  -o jsonpath={.items[*].status.allocatable} | jq . | grep nvidia
 ```
+
+## Nvidia MIG profiles
+
+*NOTE: MIG demo NOT currently working in RHDP*
 
 Manually label nodes as GPU
 
@@ -86,10 +94,12 @@ oc label node --overwrite \
 
 ## Links
 
+- [Additional Notes](components/operators/gpu-operator-certified/instance/INFO.md)
 - [Docs - AWS GPU Instances](https://aws.amazon.com/ec2/instance-types/#Accelerated_Computing)
 - [Docs - Nvidia GPU Operator on Openshift](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/contents.html)
 - [Docs - Nvidia GPU admin dashboard](https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html)
-- [Docs - MIG support in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/mig-ocp.html)
+- [Docs - Multi Instance GPU (MIG) in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/mig-ocp.html)
+- [Docs - Time Slicing in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/time-slicing-gpus-in-openshift.html)
 - [Blog - RH Nvidia GPUs on OpenShift](https://cloud.redhat.com/blog/autoscaling-nvidia-gpus-on-red-hat-openshift)
 - [Demo - GPU DevSpaces](https://github.com/bkoz/devspaces)
 - [GPU Operator default config map](https://gitlab.com/nvidia/kubernetes/gpu-operator/-/blob/v23.6.1/assets/state-mig-manager/0400_configmap.yaml?ref_type=tags)
@@ -101,3 +111,13 @@ oc label node --overwrite \
 - [x] Setup OpenShift console plugins for Nvidia 
 - [ ] Document offline install of Nvidia GPU Operator
 - [ ] Make bash functions kustomization
+
+## WIP
+
+```
+# aws gpu - MIG - NOT WORKING in RHDP
+# requires zone - us-east-2b for p4d.24xlarge
+
+ocp_aws_create_gpu_machineset p4d.24xlarge
+setup_mig_config_nvidia single all-1g.5gb
+```

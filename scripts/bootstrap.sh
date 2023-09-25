@@ -148,7 +148,7 @@ setup_dashboard_nvidia_monitor(){
 setup_dashboard_nvidia_admin(){
   helm repo add rh-ecosystem-edge https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu || true
   helm repo update
-  helm upgrade -n nvidia-gpu-operator console-plugin-nvidia-gpu rh-ecosystem-edge/console-plugin-nvidia-gpu
+  helm upgrade --install -n nvidia-gpu-operator console-plugin-nvidia-gpu rh-ecosystem-edge/console-plugin-nvidia-gpu
 
   oc get consoles.operator.openshift.io cluster --output=jsonpath="{.spec.plugins}"
   oc patch consoles.operator.openshift.io cluster --patch '{ "spec": { "plugins": ["console-plugin-nvidia-gpu"] } }' --type=merge
@@ -160,6 +160,8 @@ setup_dashboard_nvidia_admin(){
 setup_mig_config_nvidia(){
   MIG_MODE=${1:-single}
   MIG_CONFIG=${1:-all-1g.5gb}
+
+  ocp_scale_all_machineset
 
   oc apply -k components/operators/gpu-operator-certified/instance/overlays/mig-"${MIG_MODE}"
 
@@ -173,7 +175,7 @@ setup_aws_cluster_autoscaling(){
   # setup cluster autoscaling
   oc apply -k components/configs/autoscale/overlays/gpus
 
-  ${1:-p4d.24xlarge}
+  # INSTANCE_TYPE=${1:-p4d.24xlarge}
   ocp_aws_create_gpu_machineset "${INSTANCE_TYPE}"
   ocp_create_machineset_autoscale
 }
