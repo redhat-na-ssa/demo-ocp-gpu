@@ -157,6 +157,19 @@ setup_dashboard_nvidia_admin(){
   oc -n nvidia-gpu-operator get all -l app.kubernetes.io/name=console-plugin-nvidia-gpu
 }
 
+setup_mig_config_nvidia(){
+  MIG_MODE=${1:-single}
+  MIG_CONFIG=${1:-all-1g.5gb}
+
+  # MIG_MODE=${1:-mixed}
+  # MIG_CONFIG=${1:-all-balanced}
+
+  oc label node \
+    -l node-role.kubernetes.io/gpu \
+    nvidia.com/mig.config=$MIG_CONFIG --overwrite
+}
+
+
 setup_aws_cluster_autoscaling(){
   # setup cluster autoscaling
   oc apply -k components/configs/autoscale/overlays/gpus

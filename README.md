@@ -17,30 +17,61 @@ scripts/bootstrap.sh
 
 # skip on bare metal - setup autoscaling in aws
 . scripts/bootstrap.sh
-setup_cluster_autoscaling
+setup_aws_cluster_autoscaling
 
 # deploy gpu test pod
 oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml
 ```
 
-Label nodes as GPU
+Get GPU nodes
+
+```
+oc get nodes -l node-role.kubernetes.io/gpu
+```
+
+Manually label nodes as GPU
 
 ```
 NODE=worker1.ocp.run
   oc label node/${NODE} --overwrite "node-role.kubernetes.io/gpu="
 ```
 
-Apply MIG partitioning profile(s)
+Setup MIG profile
 
 ```
+. scripts/bootstrap.sh
+
+# setup MIG single - ex: nvidia.com/gpu: 1
+setup_mig_config_nvidia single all-1g.5gb
+setup_mig_config_nvidia single all-2g.10gb
+
+# setup MIG mixed - ex: nvidia.com/mig-2g.10gb: 1
+setup_mig_config_nvidia mixed all-balanced
+```
+
+Manually Pick MIG profile
+
+```
+# mode = single / mixed
 MIG_CONFIG=all-1g.5gb
-  oc label node/${NODE} --overwrite "nvidia.com/mig.config=${MIG_CONFIG}"
-
 MIG_CONFIG=all-2g.10gb
-  oc label node/${NODE} --overwrite "nvidia.com/mig.config=${MIG_CONFIG}"
 
+# mode = mixed 
 MIG_CONFIG=all-balanced
-  oc label node/${NODE} --overwrite "nvidia.com/mig.config=${MIG_CONFIG}"
+```
+
+Manually apply MIG partitioning profile(s) - Mixed
+
+```
+# add profile label
+oc label node --overwrite \
+  -l "node-role.kubernetes.io/gpu" \
+  "nvidia.com/mig.config=${MIG_CONFIG}"
+
+# remove profile label
+oc label node --overwrite \
+  -l "node-role.kubernetes.io/gpu" \
+  "nvidia.com/mig.config-"
 ```
 
 ## Links
@@ -56,7 +87,7 @@ MIG_CONFIG=all-balanced
 ## TODO
 
 - [ ] Create Nvidia GPU time-slicing config
-- [ ] Create Nvidia GPU MIG config
+- [x] Create Nvidia GPU MIG config
 - [x] Setup OpenShift console plugins for Nvidia 
 - [ ] Document offline install of Nvidia GPU Operator
 - [ ] Make bash functions kustomization
