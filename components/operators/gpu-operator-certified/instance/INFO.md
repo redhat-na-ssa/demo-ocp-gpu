@@ -38,5 +38,6 @@ Time-slicing GPU can be any Nvidia type (as documented by Nvidia):
 
 
 ## Links
+- [GPU Operator default configmap](https://gitlab.com/nvidia/kubernetes/gpu-operator/-/blob/v23.6.1/assets/state-mig-manager/0400_configmap.yaml?ref_type=tags)
 - [AWS GPU Instances](https://aws.amazon.com/ec2/instance-types/#Accelerated_Computing)
 - [Docs - MIG support in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/mig-ocp.html)
