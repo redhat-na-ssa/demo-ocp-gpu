@@ -1,25 +1,41 @@
 #!/bin/bash
-# shellcheck disable=SC2015,SC1091
+# shellcheck disable=SC2015,SC1091,SC2119,SC2120
+set -e
 
-COMPLETION_PATH=scratch
-BIN_PATH=${COMPLETION_PATH}/bin
-
-debug(){
-echo "PWD:  $(pwd)"
-echo "PATH: ${PATH}"
+check_shell(){
+  [ -n "$BASH_VERSION" ] && return
+  echo "Please verify you are running in bash shell"
+  sleep 10
 }
 
-# get functions
-get_functions(){
-  echo -e "functions:\n"
-  sed -n '/(){/ s/(){$//p' "$(dirname "$0")/$(basename "$0")"
+check_git_root(){
+  if [ -d .git ] && [ -d scripts ]; then
+    GIT_ROOT=$(pwd)
+    export GIT_ROOT
+    echo "GIT_ROOT: ${GIT_ROOT}"
+  else
+    echo "Please run this script from the root of the git repo"
+    exit
+  fi
 }
+
+get_script_path(){
+  SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+  echo "SCRIPT_DIR: ${SCRIPT_DIR}"
+}
+
+
+check_shell
+check_git_root
+get_script_path
 
 usage(){
   echo "
-  usage: source scripts/funtions.sh
+  If you want to setup autoscaling in AWS run the following:
+  
+    . scripts/bootstrap.sh && setup_aws_cluster_autoscaling
+
   "
-  # get_functions
 }
 
 is_sourced() {
@@ -29,32 +45,6 @@ is_sourced() {
       case ${0##*/} in dash|-dash|bash|-bash|ksh|-ksh|sh|-sh) return 0;; esac
   fi
   return 1  # NOT sourced.
-}
-
-setup_venv(){
-  python3 -m venv venv
-  source venv/bin/activate
-  pip install -q -U pip
-
-  check_venv || usage
-}
-
-check_venv(){
-  # activate python venv
-  [ -d venv ] && . venv/bin/activate || setup_venv
-  [ -e requirements.txt ] && pip install -q -r requirements.txt
-}
-
-check_oc(){
-  echo "Are you on the right OCP cluster?"
-
-  oc whoami || exit 0
-  UUID=$(oc whoami --show-server | sed 's@https://@@; s@:.*@@; s@api.*-@@; s@[.].*$@@')
-  export UUID
-  oc status
-
-  echo "UUID: ${UUID}"
-  sleep 4
 }
 
 # check login
@@ -72,11 +62,13 @@ wait_for_crd(){
   done
 }
 
-aws_create_gpu_machineset(){
+ocp_aws_create_gpu_machineset(){
   # https://aws.amazon.com/ec2/instance-types/g4
   # single gpu: g4dn.{2,4,8,16}xlarge
   # multi gpu: g4dn.12xlarge
   # cheapest: g4ad.4xlarge
+  # a100 (MIG): p4d.24xlarge
+  # h100 (MIG): p5.48xlarge
   INSTANCE_TYPE=${1:-g4dn.4xlarge}
   MACHINE_SET=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep worker | head -n1)
 
@@ -89,12 +81,18 @@ aws_create_gpu_machineset(){
 
   MACHINE_SET_GPU=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep gpu | head -n1)
 
+  # cosmetic
   oc -n openshift-machine-api \
-    patch ${MACHINE_SET_GPU} \
+    patch "${MACHINE_SET_GPU}" \
+    --type=merge --patch '{"spec":{"template":{"spec":{"metadata":{"labels":{"node-role.kubernetes.io/gpu":""}}}}}}'
+
+  # should help auto provisioner
+  oc -n openshift-machine-api \
+    patch "${MACHINE_SET_GPU}" \
     --type=merge --patch '{"spec":{"template":{"spec":{"metadata":{"labels":{"cluster-api/accelerator":"nvidia-gpu"}}}}}}'
   
     oc -n openshift-machine-api \
-    patch ${MACHINE_SET_GPU} \
+    patch "${MACHINE_SET_GPU}" \
     --type=merge --patch '{"metadata":{"labels":{"cluster-api/accelerator":"nvidia-gpu"}}}'
 
 }
@@ -123,11 +121,58 @@ YAML
   done
 }
 
-setup_cluster_autoscaling(){
-  # setup cluster autoscaling
-  oc apply -k components/configs/autoscale/overlays/default
+ocp_scale_all_machineset(){
+  REPLICAS=${1:-1}
+  MACHINE_SETS=${2:-$(oc -n openshift-machine-api get machineset -o name)}
 
-  aws_create_gpu_machineset
+  # scale workers
+  echo "${MACHINE_SETS}" | \
+    xargs \
+      oc -n openshift-machine-api \
+      scale --replicas="${REPLICAS}"
+
+}
+
+setup_dashboard_nvidia_monitor(){
+  curl -sLfO https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json
+  oc create configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed --from-file=dcgm-exporter-dashboard.json || true
+  oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/dashboard=true" --overwrite
+  oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/odc-dashboard=true" --overwrite
+  oc -n openshift-config-managed get cm nvidia-dcgm-exporter-dashboard --show-labels
+}
+
+setup_dashboard_nvidia_admin(){
+  helm repo add rh-ecosystem-edge https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu || true
+  helm repo update
+  helm upgrade --install -n nvidia-gpu-operator console-plugin-nvidia-gpu rh-ecosystem-edge/console-plugin-nvidia-gpu
+
+  oc get consoles.operator.openshift.io cluster --output=jsonpath="{.spec.plugins}" || true
+  oc patch consoles.operator.openshift.io cluster --patch '{ "spec": { "plugins": ["console-plugin-nvidia-gpu"] } }' --type=merge || true
+  oc patch consoles.operator.openshift.io cluster --patch '[{"op": "add", "path": "/spec/plugins/-", "value": "console-plugin-nvidia-gpu" }]' --type=json || true
+  oc patch clusterpolicies.nvidia.com gpu-cluster-policy --patch '{ "spec": { "dcgmExporter": { "config": { "name": "console-plugin-nvidia-gpu" } } } }' --type=merge || true
+  oc -n nvidia-gpu-operator get all -l app.kubernetes.io/name=console-plugin-nvidia-gpu
+}
+
+setup_mig_config_nvidia(){
+  MIG_MODE=${1:-single}
+  MIG_CONFIG=${1:-all-1g.5gb}
+
+  ocp_scale_all_machineset
+
+  oc apply -k components/operators/gpu-operator-certified/instance/overlays/mig-"${MIG_MODE}"
+
+  oc label node \
+    -l node-role.kubernetes.io/gpu \
+    nvidia.com/mig.config=$MIG_CONFIG --overwrite
+}
+
+
+setup_aws_cluster_autoscaling(){
+  # setup cluster autoscaling
+  oc apply -k components/configs/autoscale/overlays/gpus
+
+  # INSTANCE_TYPE=${1:-p4d.24xlarge}
+  ocp_aws_create_gpu_machineset "${INSTANCE_TYPE}"
   ocp_create_machineset_autoscale
 }
 
@@ -142,7 +187,7 @@ setup_operator_nfd(){
   # setup nfd operator
   oc apply -k components/operators/nfd/operator/overlays/stable
   wait_for_crd nodefeaturediscoveries.nfd.openshift.io
-  oc apply -k components/operators/nfd/instance/overlays/default
+  oc apply -k components/operators/nfd/instance/overlays/only-nvidia
 }
 
 setup_operator_nvidia(){
@@ -152,14 +197,46 @@ setup_operator_nvidia(){
   oc apply -k components/operators/gpu-operator-certified/instance/overlays/default
 }
 
-setup_demo(){
-  setup_operator_nfd
-  setup_operator_nvidia
+setup_operator_pipelines(){
+  # setup tekton operator
+  oc apply -k components/operators/openshift-pipelines-operator-rh/operator/overlays/latest
+  wait_for_crd pipelines.tekton.dev
 }
 
-is_sourced && return 0
+setup_namespaces(){
+  # setup namespaces
+  oc apply -k components/configs/namespaces/overlays/default
+}
 
-check_oc
+check_cluster_version(){
+  OCP_VERSION=$(oc version | sed -n '/Server Version: / s/Server Version: //p')
+  AVOID_VERSIONS=()
+  TESTED_VERSIONS=("4.12.33")
+
+  echo "Current OCP version: ${OCP_VERSION}"
+  echo "Tested OCP version(s): ${TESTED_VERSIONS[*]}"
+  echo ""
+
+  # shellcheck disable=SC2076
+  if [[ " ${AVOID_VERSIONS[*]} " =~ " ${OCP_VERSION} " ]]; then
+    echo "OCP version ${OCP_VERSION} is known to have issues with this demo"
+    echo ""
+    echo 'Recommend: "oc adm upgrade --to-latest=true"'
+    echo ""
+  fi
+}
+
+setup_demo(){
+  check_cluster_version
+  setup_operator_nfd
+  setup_operator_nvidia
+  setup_dashboard_nvidia_monitor
+  setup_dashboard_nvidia_admin
+  usage
+}
+
+is_sourced && check_shell && return
+
 check_oc_login
 
 setup_demo
