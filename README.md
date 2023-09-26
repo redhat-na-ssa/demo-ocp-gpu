@@ -9,6 +9,11 @@ This repo is intended to help setup GPU prerequisites for other demos.
 - Nvidia GPU Hardware
 - OpenShift 4.11+ deployed in AWS (for autoscaling)
 
+Red Hat Demo Platform Options
+
+  - `MLOps Demo: Data Science & Edge Practice`
+  - `Red Hat OpenShift Container Platform 4 Demo`
+
 ## Quickstart
 
 ```
