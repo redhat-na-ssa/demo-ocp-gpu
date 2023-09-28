@@ -36,10 +36,10 @@ Setup Time Slicing (4x)
 oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing-4
 ```
 
-Request / Test a GPU workload of 10 GPUs
+Request / Test a GPU workload of 6 GPUs
 
 ```
-oc apply -k components/demos/nvidia-gpu-verification/overlays/toleration-replicas-10
+oc apply -k components/demos/nvidia-gpu-verification/overlays/toleration-replicas-6
 
 # check the number of pods
 oc -n nvidia-gpu-verification get pods

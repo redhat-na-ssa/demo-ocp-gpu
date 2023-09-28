@@ -62,6 +62,10 @@ wait_for_crd(){
   done
 }
 
+ocp_control_nodes_schedulable(){
+  oc patch schedulers.config.openshift.io/cluster --type merge --patch '{"spec":{"mastersSchedulable": true}}'
+}
+
 ocp_aws_create_gpu_machineset(){
   # https://aws.amazon.com/ec2/instance-types/g4
   # single gpu: g4dn.{2,4,8,16}xlarge
@@ -121,7 +125,7 @@ YAML
   done
 }
 
-ocp_scale_all_machineset(){
+ocp_scale_machineset(){
   REPLICAS=${1:-1}
   MACHINE_SETS=${2:-$(oc -n openshift-machine-api get machineset -o name)}
 
@@ -157,7 +161,7 @@ setup_mig_config_nvidia(){
   MIG_MODE=${1:-single}
   MIG_CONFIG=${1:-all-1g.5gb}
 
-  ocp_scale_all_machineset
+  ocp_scale_machineset
 
   oc apply -k components/operators/gpu-operator-certified/instance/overlays/mig-"${MIG_MODE}"
 
@@ -174,6 +178,12 @@ setup_aws_cluster_autoscaling(){
   # INSTANCE_TYPE=${1:-p4d.24xlarge}
   ocp_aws_create_gpu_machineset "${INSTANCE_TYPE}"
   ocp_create_machineset_autoscale
+
+  ocp_control_nodes_schedulable
+
+  # scale workers down
+  WORKER_MS="$(oc -n openshift-machine-api get machineset -o name | grep worker)"
+  ocp_scale_machineset 1 "${WORKER_MS}"
 }
 
 setup_operator_devspaces(){
