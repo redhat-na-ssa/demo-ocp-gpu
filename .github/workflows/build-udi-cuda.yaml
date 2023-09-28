@@ -9,7 +9,7 @@ on:  # yamllint disable-line rule:truthy
   # schedule:
   #   - cron: '5 4 * * 6'
   push:
-    branches: ["main"]
+    branches: ["*"]
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
     paths: ["containers/udi-cuda-addon/**"]
