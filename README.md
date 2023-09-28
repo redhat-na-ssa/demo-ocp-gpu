@@ -1,8 +1,9 @@
 # Demo GPUs on OpenShift
 
-Get Nvidia GPUs setup on OpenShift and explore platform capabilities.
+Get Nvidia GPUs setup on OpenShift and explore platform capabilities. This repo is intended to help setup GPU prerequisites for other demos.
 
-This repo is intended to help setup GPU prerequisites for other demos.
+The default [bootstrap](scripts/bootstrap.sh) configures GPU [time-slicing](components/operators/gpu-operator-certified/instance/overlays/time-slicing-2) which allows multiple workloads
+to share a single GPU.
 
 Try out GPUs in OpenShift Dev Spaces via a [devfile.yaml](devfile.yaml). 
 Run [jupyter notebooks](notebooks) with [pytorch](notebooks/00-test-gpu-torch.ipynb)
@@ -11,7 +12,7 @@ or [tensorflow](notebooks/00-test-gpu-tensorflow.ipynb).
 
 ## Prerequisites
 
-- Nvidia GPU Hardware
+- Nvidia GPU hardware
 - OpenShift 4.11+
 - OpenShift Dev Spaces 3.8.0+ (w/ GPUs)
 - AWS (Auto Scaling)
