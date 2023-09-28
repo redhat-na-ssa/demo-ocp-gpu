@@ -30,13 +30,13 @@ setup_aws_cluster_autoscaling
 oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml
 ```
 
-Setup Time Slicing
+Setup Time Slicing (4x)
 
 ```
-oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing
+oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing-4
 ```
 
-Test a GPU workload of 10 gpus
+Request / Test a GPU workload of 10 GPUs
 
 ```
 oc apply -k components/demos/nvidia-gpu-verification/overlays/toleration-replicas-10
