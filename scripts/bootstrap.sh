@@ -76,12 +76,14 @@ ocp_aws_create_gpu_machineset(){
   INSTANCE_TYPE=${1:-g4dn.4xlarge}
   MACHINE_SET=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep worker | head -n1)
 
-  oc -n openshift-machine-api get "${MACHINE_SET}" -o yaml | \
-    sed '/machine/ s/-worker/-gpu/g
-      /name/ s/-worker/-gpu/g
-      s/instanceType.*/instanceType: '"${INSTANCE_TYPE}"'/
-      s/replicas.*/replicas: 0/' | \
-    oc apply -f -
+  # check for an existing gpu machine set
+  oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep gpu || \
+    oc -n openshift-machine-api get "${MACHINE_SET}" -o yaml | \
+      sed '/machine/ s/-worker/-gpu/g
+        /name/ s/-worker/-gpu/g
+        s/instanceType.*/instanceType: '"${INSTANCE_TYPE}"'/
+        s/replicas.*/replicas: 0/' | \
+      oc apply -f -
 
   MACHINE_SET_GPU=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep gpu | head -n1)
 
