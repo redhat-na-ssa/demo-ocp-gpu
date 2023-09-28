@@ -57,7 +57,7 @@ oc get nodes \
 
 ## Nvidia MIG profiles
 
-*NOTE: MIG demo NOT currently working in RHDP*
+*NOTE: MIG demo currently a WIP for RHDP - there be dragons here*
 
 Manually label nodes as GPU
 
