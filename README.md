@@ -30,10 +30,19 @@ setup_aws_cluster_autoscaling
 oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml
 ```
 
-AWS Setup Time Slicing
+Setup Time Slicing
 
 ```
 oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing
+```
+
+Test a GPU workload of 10 gpus
+
+```
+oc apply -k components/demos/nvidia-gpu-verification/overlays/toleration-replicas-10
+
+# check the number of pods
+oc -n nvidia-gpu-verification get pods
 ```
 
 Get GPU nodes
