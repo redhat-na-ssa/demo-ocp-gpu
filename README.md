@@ -4,19 +4,22 @@ Get Nvidia GPUs setup on OpenShift and explore platform capabilities.
 
 This repo is intended to help setup GPU prerequisites for other demos.
 
+Try out GPUs in OpenShift Dev Spaces via a [devfile.yaml](devfile.yaml). 
+Run [jupyter notebooks](notebooks) with [pytorch](notebooks/00-test-gpu-torch.ipynb)
+or [tensorflow](notebooks/00-test-gpu-tensorflow.ipynb).
+
+
 ## Prerequisites
 
 - Nvidia GPU Hardware
 - OpenShift 4.11+
-- OpenShift Dev Spaces 3.8.0+ (for GPUs in Dev Spaces) `*`
-- * AWS (for autoscaling) `*`
-
-`* - optional`
+- OpenShift Dev Spaces 3.8.0+ (w/ GPUs)
+- AWS (Auto Scaling)
 
 Red Hat Demo Platform Options
 
-  - `MLOps Demo: Data Science & Edge Practice`
-  - `Red Hat OpenShift Container Platform 4 Demo`
+- `MLOps Demo: Data Science & Edge Practice`
+- `Red Hat OpenShift Container Platform 4 Demo`
 
 ## Quickstart
 
@@ -32,6 +35,9 @@ setup_aws_cluster_autoscaling
 
 # deploy gpu test pod
 oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml
+
+# deploy devspaces
+setup_operator_devspaces
 ```
 
 Setup Time Slicing (4x)

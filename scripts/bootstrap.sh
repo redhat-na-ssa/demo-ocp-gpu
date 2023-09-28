@@ -215,6 +215,13 @@ setup_operator_pipelines(){
   wait_for_crd pipelines.tekton.dev
 }
 
+setup_operator_devspaces(){
+  # setup devspaces
+  oc apply -k components/operators/devspaces/operator/overlays/stable
+  wait_for_crd checlusters.org.eclipse.che
+  oc apply -k components/operators/devspaces/instance/overlays/default
+}
+
 setup_namespaces(){
   # setup namespaces
   oc apply -k components/configs/namespaces/overlays/default
