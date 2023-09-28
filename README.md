@@ -7,7 +7,11 @@ This repo is intended to help setup GPU prerequisites for other demos.
 ## Prerequisites
 
 - Nvidia GPU Hardware
-- OpenShift 4.11+ deployed in AWS (for autoscaling)
+- OpenShift 4.11+
+- OpenShift Dev Spaces 3.8.0+ (for GPUs in Dev Spaces) `*`
+- * AWS (for autoscaling) `*`
+
+`* - optional`
 
 Red Hat Demo Platform Options
 
@@ -115,5 +119,5 @@ oc label node --overwrite \
 - [Docs - Multi Instance GPU (MIG) in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/mig-ocp.html)
 - [Docs - Time Slicing in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/time-slicing-gpus-in-openshift.html)
 - [Blog - RH Nvidia GPUs on OpenShift](https://cloud.redhat.com/blog/autoscaling-nvidia-gpus-on-red-hat-openshift)
-- [Demo - GPU DevSpaces](https://github.com/bkoz/devspaces)
+- [Demo - bkoz GPU DevSpaces](https://github.com/bkoz/devspaces)
 - [GPU Operator default config map](https://gitlab.com/nvidia/kubernetes/gpu-operator/-/blob/v23.6.1/assets/state-mig-manager/0400_configmap.yaml?ref_type=tags)
