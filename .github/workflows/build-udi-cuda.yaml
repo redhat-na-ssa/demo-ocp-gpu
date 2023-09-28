@@ -11,8 +11,8 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches: ["*"]
     # Publish semver tags as releases.
-    tags: ["v*.*.*"]
-    paths: ["containers/udi-cuda-addon/**"]
+    # tags: ["v*.*.*"]
+    # paths: ["containers/udi-cuda-addon/**"]
   pull_request:
     branches: ["main"]
     paths: ["containers/udi-cuda-addon/**"]
