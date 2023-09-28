@@ -19,7 +19,7 @@ components:
             nvidia.com/gpu: '1'
       controller.devfile.io/merge-contribution: true
     container:
-      image: quay.io/bkozdemb/gpu-devspaces
+      image: ghcr.io/redhat-na-ssa/udi-cuda:latest
       memoryLimit: 2G
       cpuLimit: 1000m
       mountSources: true
