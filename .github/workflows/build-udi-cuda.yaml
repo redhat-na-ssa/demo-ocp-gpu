@@ -76,8 +76,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5.0.0
         with:
-          context: ${{ steps.prep.outputs.name }}
-          file: ${{ steps.prep.outputs.name }}/Dockerfile
+          context: containers/${{ steps.prep.outputs.name }}-addon
+          file: Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}
