@@ -126,6 +126,13 @@ RUN yum install -y \
 
 ENV XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/local/cuda
 
+# install: oc
+ARG OC4_URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux.tar.gz"
+
+RUN curl -sL "${OC4_URL}" | \
+    tar -C /opt/app-root/bin -vzxf- oc && \
+    /opt/app-root/bin/oc completion bash > /etc/bash_completion.d/oc
+
 # Restore notebook user workspace
 USER 1001
 WORKDIR /projects
