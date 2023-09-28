@@ -177,7 +177,7 @@ setup_aws_cluster_autoscaling(){
 
   # INSTANCE_TYPE=${1:-p4d.24xlarge}
   ocp_aws_create_gpu_machineset "${INSTANCE_TYPE}"
-  ocp_create_machineset_autoscale
+  ocp_create_machineset_autoscale 3
 
   ocp_control_nodes_schedulable
 
