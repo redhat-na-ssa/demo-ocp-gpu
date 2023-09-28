@@ -1,0 +1,27 @@
+schemaVersion: 2.2.0
+metadata:
+  name: devspaces-gpu
+attributes:
+#   controller.devfile.io/scc: container-build
+  controller.devfile.io/storage-type: ephemeral
+# projects:
+#   - name: devspaces-gpu
+#     git:
+#       remotes:
+#         origin: "https://github.com/bkoz/devspaces.git"
+#       checkoutFrom:
+#         revision: main
+components:
+  - attributes:
+      container-overrides:
+        resources:
+          limits:
+            nvidia.com/gpu: '1'
+      controller.devfile.io/merge-contribution: true
+    container:
+      image: quay.io/bkozdemb/gpu-devspaces
+      memoryLimit: 2G
+      cpuLimit: 1000m
+      mountSources: true
+      sourceMapping: /projects
+    name: python
