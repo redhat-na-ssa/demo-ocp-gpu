@@ -15,7 +15,7 @@ LABEL name="udi-cuda-python-3.9" \
 # Install CUDA base from:
 # https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/11.4.2/ubi8/base/Dockerfile
 USER 0
-WORKDIR /opt/app-root/bin
+WORKDIR /usr/local/bin
 
 # install python
 RUN yum install -y python39 && \
@@ -126,12 +126,18 @@ RUN yum install -y \
 
 ENV XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/local/cuda
 
-# install: oc
+# install: oc,tkn
 ARG OC4_URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux.tar.gz"
+ARG TKN_URL="https://mirror.openshift.com/pub/openshift-v4/clients/pipeline/latest/tkn-linux-amd64.tar.gz"
 
 RUN curl -sL "${OC4_URL}" | \
-    tar -C /opt/app-root/bin -vzxf- oc && \
-    /opt/app-root/bin/oc completion bash > /etc/bash_completion.d/oc
+      tar -C /usr/local/bin -vzxf- oc kubectl && \
+      /usr/local/bin/oc completion bash > /etc/bash_completion.d/oc && \
+      echo "source /etc/bash_completion.d/oc" >> /home/user/.bashrc && \
+    curl -sL "${TKN_URL}" | \
+      tar -C /usr/local/bin -vzxf- tkn && \
+      /usr/local/bin/tkn completion bash > /etc/bash_completion.d/tkn && \
+      echo "source /etc/bash_completion.d/tkn" >> /home/user/.bashrc
 
 # Restore notebook user workspace
 USER 1001
