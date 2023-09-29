@@ -4,7 +4,6 @@ metadata:
   name: devworkspace-config
 config:
   workspace:
-    # see 
     # kludge: allow cluster autoscaling
     ignoredUnrecoverableEvents:
       - FailedScheduling
