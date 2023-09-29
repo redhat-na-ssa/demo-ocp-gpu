@@ -219,7 +219,7 @@ setup_operator_devspaces(){
   # setup devspaces
   oc apply -k components/operators/devspaces/operator/overlays/stable
   wait_for_crd checlusters.org.eclipse.che
-  oc apply -k components/operators/devspaces/instance/overlays/default
+  oc apply -k components/operators/devspaces/instance/overlays/timeout-12m
 }
 
 setup_namespaces(){
