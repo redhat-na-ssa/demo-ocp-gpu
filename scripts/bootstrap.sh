@@ -158,6 +158,7 @@ nvidia_setup_dashboard_monitor(){
   oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/dashboard=true" --overwrite
   oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/odc-dashboard=true" --overwrite
   oc -n openshift-config-managed get cm nvidia-dcgm-exporter-dashboard --show-labels
+  rm dcgm-exporter-dashboard.json
 }
 
 nvidia_setup_dashboard_admin(){
