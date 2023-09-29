@@ -1,20 +1,24 @@
 # Demo GPUs on OpenShift
 
-Get Nvidia GPUs setup on OpenShift and explore platform capabilities. This repo is intended to help setup GPU prerequisites for other demos.
+Setup Nvidia GPUs on OpenShift with ease. This repo is intended as a foundation for GPU workloads on OpenShift.
 
-Initially `scripts/bootstrap.sh` configures GPU time-slicing which allows 4 workloads
+Initially `bootstrap.sh` configures GPU time-slicing which allows 4 workloads
 to share a single GPU.
 
-- Try out GPUs in OpenShift Dev Spaces via a [devfile.yaml](devfile.yaml)
-- Run [jupyter notebooks](notebooks) with [pytorch](notebooks/00-test-gpu-torch.ipynb)
-or [tensorflow](notebooks/00-test-gpu-tensorflow.ipynb).
+### In addition
 
+- Try out GPUs in OpenShift Dev Spaces via this [devfile.yaml](devfile.yaml)
+- Run [jupyter notebooks](notebooks) with [pytorch](notebooks/00-test-gpu-torch.ipynb)
+or [tensorflow](notebooks/00-test-gpu-tensorflow.ipynb)
+
+The [components](components) folder is intended for reuse with ArgoCD or OpenShift GitOps.
+Familarity with Kustomize will be helpful. This folder contains various ~~secret~~ recipes for `oc apply -k`.
 
 ## Prerequisites
 
 - Nvidia GPU hardware
 - OpenShift 4.11+ w/ cluster admin
-  - AWS (auto scaling, optional)
+- AWS (auto scaling, optional)
 - OpenShift Dev Spaces 3.8.0+ (optional)
 - Internet access
 
@@ -25,27 +29,38 @@ Red Hat Demo Platform Catalog Options
 
 ## Quickstart
 
+Setup Cluster GPU Operators
 ```
-# setup operators
 scripts/bootstrap.sh
+```
 
+## Other Commands
+
+AWS autoscaling w/ OpenShift Dev Spaces
+
+*NOTE: GPU nodes may take 10 - 15 mins to become available*
+
+```
 # aws gpu - load functions
 . scripts/bootstrap.sh
 
 # aws gpu - basic autoscaling
 setup_aws_cluster_autoscaling
 
-# deploy gpu test pod
-oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml
-
 # deploy devspaces
 setup_operator_devspaces
 ```
 
-Setup Time Slicing (4x)
+Deploy GPU test pod
 
 ```
-oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing-4
+oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml
+```
+
+Setup Time Slicing (2x)
+
+```
+oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing-2
 ```
 
 Request / Test a GPU workload of 6 GPUs
