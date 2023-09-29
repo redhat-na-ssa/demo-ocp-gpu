@@ -4,15 +4,42 @@ Red Hat Demo Platform Catalog (RHDP) option:
 
 - `MLOps Demo: Data Science & Edge Practice`
 
-*MIG demo is currently a WIP for RHDP*
+*MIG demo is currently a WIP for RHDP and likely will NOT work*
+
+Error message
+```
+error launching instance: You have requested more vCPU capacity than your
+current vCPU limit of 64 allows for the instance bucket that the specified
+instance type belongs to. 
+```
 
 ### AWS Notes
 
-AWS type `p4d.24xlarge` is currently only in availability zone `us-east-2b`.
+AWS type `p4d.24xlarge` is currently only in availability zone `us-east-2b` and has 96 vCPU.
 
 If your cluster does not have a machine set in `us-east-2b` you
 will probably not be able to request this GPU type.
 
+## Prerequisites
+
+- Nvidia GPU hardware
+  - A100
+  - H100
+  - A30
+
+## Quickstart
+
+Setup MIG single mode.
+
+- Type: `p4d.24xlarge` = 8 x GPUs
+- Profile: 1 GPU and 5GB of memory
+- Resource: `nvidia.com/gpu: 1`
+
+```
+. scripts/bootstrap.sh
+
+nvidia_setup_mig_config single all-1g.5gb
+```
 
 ## Nvidia MIG profiles
 
