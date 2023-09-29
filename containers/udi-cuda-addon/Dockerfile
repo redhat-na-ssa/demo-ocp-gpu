@@ -18,7 +18,7 @@ USER 0
 WORKDIR /usr/local/bin
 
 # install python
-RUN yum install -y python39 && \
+RUN yum install -y python39 bash-completion && \
     alternatives --set python /usr/bin/python3.9 && \
     ln -s /usr/bin/pip3.9 /usr/bin/pip && \
     yum clean all && \
