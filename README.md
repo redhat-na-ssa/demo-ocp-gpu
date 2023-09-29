@@ -45,7 +45,7 @@ AWS autoscaling w/ OpenShift Dev Spaces
 . scripts/bootstrap.sh
 
 # aws gpu - basic autoscaling
-setup_aws_cluster_autoscaling
+ocp_aws_cluster_autoscaling
 
 # deploy devspaces
 setup_operator_devspaces
