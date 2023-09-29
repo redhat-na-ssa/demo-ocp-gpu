@@ -6,10 +6,10 @@ LABEL name="udi-cuda-python-3.9" \
       description="CUDA Python 3.9 builder image for UDI" \
       io.k8s.display-name="CUDA Python 3.9 base image for UDI" \
       io.k8s.description="CUDA Python 3.9 builder image for UDI" \
-      authoritative-source-url="https://github.com/opendatahub-io/notebooks" \
+      authoritative-source-url="https://github.com/redhat-na-ssa/demo-ocp-gpu" \
       io.openshift.build.commit.ref="main" \
-      io.openshift.build.source-location="https://github.com/opendatahub-io/notebooks/tree/main/cuda/c9s-python-3.9" \
-      io.openshift.build.image="quay.io/opendatahub/workbench-images:cuda-c9s-python-3.9"
+      io.openshift.build.source-location="https://github.com/redhat-na-ssa/demo-ocp-gpu/tree/main/udi-cuda-addon" \
+      io.openshift.build.image="ghcr.io/redhat-na-ssa/udi-cuda:latest"
 
 
 # Install CUDA base from:
