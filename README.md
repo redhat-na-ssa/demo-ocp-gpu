@@ -29,7 +29,7 @@ Red Hat Demo Platform Catalog Options
 
 ## Quickstart
 
-Setup Cluster GPU Operators
+Setup cluster GPU operators
 ```
 scripts/bootstrap.sh
 ```
