@@ -2,22 +2,23 @@
 
 Get Nvidia GPUs setup on OpenShift and explore platform capabilities. This repo is intended to help setup GPU prerequisites for other demos.
 
-The default [bootstrap](scripts/bootstrap.sh) configures GPU [time-slicing](components/operators/gpu-operator-certified/instance/overlays/time-slicing-2) which allows multiple workloads
+Initially `scripts/bootstrap.sh` configures GPU time-slicing which allows 2 workloads
 to share a single GPU.
 
-Try out GPUs in OpenShift Dev Spaces via a [devfile.yaml](devfile.yaml). 
-Run [jupyter notebooks](notebooks) with [pytorch](notebooks/00-test-gpu-torch.ipynb)
+- Try out GPUs in OpenShift Dev Spaces via a [devfile.yaml](devfile.yaml)
+- Run [jupyter notebooks](notebooks) with [pytorch](notebooks/00-test-gpu-torch.ipynb)
 or [tensorflow](notebooks/00-test-gpu-tensorflow.ipynb).
 
 
 ## Prerequisites
 
 - Nvidia GPU hardware
-- OpenShift 4.11+
-- OpenShift Dev Spaces 3.8.0+ (w/ GPUs)
-- AWS (Auto Scaling)
+- OpenShift 4.11+ w/ cluster admin
+  - AWS (auto scaling, optional)
+- OpenShift Dev Spaces 3.8.0+ (optional)
+- Internet access
 
-Red Hat Demo Platform Options
+Red Hat Demo Platform Catalog Options
 
 - `MLOps Demo: Data Science & Edge Practice`
 - `Red Hat OpenShift Container Platform 4 Demo`
