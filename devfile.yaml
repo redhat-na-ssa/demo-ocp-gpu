@@ -12,22 +12,6 @@ attributes:
 #       checkoutFrom:
 #         revision: main
 components:
-  - name: haz-gpu 
-    kubernetes:
-      inlined: |
-        apiVersion: v1
-        kind: Pod
-        metadata:
-          name: gpu-operator-test
-        spec:
-          restartPolicy: OnFailure
-          containers:
-            - name: cuda-vector-add
-              # https://github.com/kubernetes/kubernetes/blob/v1.7.11/test/images/nvidia-cuda/Dockerfile
-              image: "k8s.gcr.io/cuda-vector-add:v0.1"
-              resources:
-                limits:
-                  nvidia.com/gpu: 1
   - attributes:
       container-overrides:
         resources:
@@ -41,10 +25,3 @@ components:
       mountSources: true
       sourceMapping: /projects
     name: python
-commands:
-  - id: haz-gpu
-    apply:
-      component: haz-gpu      
-events:
-  preStart:
-    - haz-gpu
