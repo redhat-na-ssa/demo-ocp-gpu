@@ -2,7 +2,7 @@
 
 Get Nvidia GPUs setup on OpenShift and explore platform capabilities. This repo is intended to help setup GPU prerequisites for other demos.
 
-Initially `scripts/bootstrap.sh` configures GPU time-slicing which allows 2 workloads
+Initially `scripts/bootstrap.sh` configures GPU time-slicing which allows 4 workloads
 to share a single GPU.
 
 - Try out GPUs in OpenShift Dev Spaces via a [devfile.yaml](devfile.yaml)
