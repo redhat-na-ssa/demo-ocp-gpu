@@ -2,7 +2,8 @@
 
 - [x] Create Nvidia GPU time-slicing config
 - [x] Create Nvidia GPU MIG config
-- [x] Setup OpenShift console plugins for Nvidia 
+- [x] Setup OpenShift console plugins for Nvidia
+- [ ] Show use of taints and tolerations
 - [ ] Document offline install of Nvidia GPU Operator
 - [ ] Make bash functions kustomization
 

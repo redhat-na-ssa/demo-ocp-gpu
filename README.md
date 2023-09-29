@@ -67,6 +67,12 @@ oc get nodes \
   -o jsonpath={.items[*].status.allocatable} | jq . | grep nvidia
 ```
 
+Watch cluster autoscaler logs
+
+```
+oc -n openshift-machine-api logs -f deploy/cluster-autoscaler-default
+```
+
 ## Nvidia MIG profiles
 
 *NOTE: MIG demo currently a WIP for RHDP - there be dragons here*
