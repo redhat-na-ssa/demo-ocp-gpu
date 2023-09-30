@@ -7,15 +7,6 @@
 - [ ] Document offline install of Nvidia GPU Operator
 - [ ] Make bash functions kustomization
 
-## WIP
-```
-# aws gpu - MIG - NOT WORKING in RHDP
-# requires zone - us-east-2b for p4d.24xlarge
-
-ocp_aws_create_gpu_machineset p4d.24xlarge
-setup_mig_config_nvidia single all-1g.5gb
-```
-
 ## Notes
 
 The following config will allow autoscaling with Dev Spaces [HERE](components/operators/devspaces/instance/base/devworkspace-config.yaml)

@@ -29,11 +29,13 @@ check_shell
 check_git_root
 get_script_path
 
+################# standard init #################
+
 usage(){
   echo "
   If you want to setup autoscaling in AWS run the following:
   
-    . scripts/bootstrap.sh && setup_aws_cluster_autoscaling
+    . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
 
   "
 }
@@ -47,19 +49,31 @@ is_sourced() {
   return 1  # NOT sourced.
 }
 
-# check login
-check_oc_login(){
+
+ocp_check_login(){
   oc cluster-info | head -n1
   oc whoami || exit 1
   echo
-  sleep 3
 }
 
-wait_for_crd(){
+ocp_check_info(){
+  ocp_check_login
+
+  echo "NAMESPACE: $(oc project -q)"
+  sleep "${SLEEP_SECONDS:-8}"
+}
+
+which oc >/dev/null && alias kubectl=oc
+
+k8s_wait_for_crd(){
   CRD=${1}
-  until oc get crd "${CRD}" >/dev/null 2>&1
+  until kubectl get crd "${CRD}" >/dev/null 2>&1
     do sleep 1
   done
+}
+
+ocp_control_nodes_not_schedulable(){
+  oc patch schedulers.config.openshift.io/cluster --type merge --patch '{"spec":{"mastersSchedulable": false}}'
 }
 
 ocp_control_nodes_schedulable(){
@@ -100,7 +114,11 @@ ocp_aws_create_gpu_machineset(){
     oc -n openshift-machine-api \
     patch "${MACHINE_SET_GPU}" \
     --type=merge --patch '{"metadata":{"labels":{"cluster-api/accelerator":"nvidia-gpu"}}}'
-
+  
+  oc -n openshift-machine-api \
+    patch "${MACHINE_SET_GPU}" \
+    --type=merge --patch '{"spec":{"template":{"spec":{"providerSpec":{"value":{"instanceType":"'"${INSTANCE_TYPE}"'"}}}}}}'
+  
 }
 
 ocp_create_machineset_autoscale(){
@@ -136,18 +154,18 @@ ocp_scale_machineset(){
     xargs \
       oc -n openshift-machine-api \
       scale --replicas="${REPLICAS}"
-
 }
 
-setup_dashboard_nvidia_monitor(){
+nvidia_setup_dashboard_monitor(){
   curl -sLfO https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json
   oc create configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed --from-file=dcgm-exporter-dashboard.json || true
   oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/dashboard=true" --overwrite
   oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/odc-dashboard=true" --overwrite
   oc -n openshift-config-managed get cm nvidia-dcgm-exporter-dashboard --show-labels
+  rm dcgm-exporter-dashboard.json
 }
 
-setup_dashboard_nvidia_admin(){
+nvidia_setup_dashboard_admin(){
   helm repo add rh-ecosystem-edge https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu || true
   helm repo update
   helm upgrade --install -n nvidia-gpu-operator console-plugin-nvidia-gpu rh-ecosystem-edge/console-plugin-nvidia-gpu
@@ -159,67 +177,62 @@ setup_dashboard_nvidia_admin(){
   oc -n nvidia-gpu-operator get all -l app.kubernetes.io/name=console-plugin-nvidia-gpu
 }
 
-setup_mig_config_nvidia(){
+nvidia_setup_mig_config(){
   MIG_MODE=${1:-single}
   MIG_CONFIG=${1:-all-1g.5gb}
 
-  ocp_scale_machineset
+  ocp_aws_create_gpu_machineset p4d.24xlarge
 
   oc apply -k components/operators/gpu-operator-certified/instance/overlays/mig-"${MIG_MODE}"
 
-  oc label node \
-    -l node-role.kubernetes.io/gpu \
-    nvidia.com/mig.config=$MIG_CONFIG --overwrite
+  MACHINE_SET_GPU=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep gpu | head -n1)
+
+  oc -n openshift-machine-api \
+    patch "${MACHINE_SET_GPU}" \
+    --type=merge --patch '{"spec":{"template":{"spec":{"metadata":{"labels":{"nvidia.com/mig.config":"'"${MIG_CONFIG}"'"}}}}}}'
+
 }
 
-
-setup_aws_cluster_autoscaling(){
-  # setup cluster autoscaling
+ocp_aws_cluster_autoscaling(){
   oc apply -k components/configs/autoscale/overlays/gpus
 
-  # INSTANCE_TYPE=${1:-p4d.24xlarge}
-  ocp_aws_create_gpu_machineset "${INSTANCE_TYPE}"
-  ocp_create_machineset_autoscale 3
+  ocp_aws_create_gpu_machineset g4dn.4xlarge
+  ocp_create_machineset_autoscale 0 3
 
   ocp_control_nodes_schedulable
 
-  # scale workers down
+  # scale workers to 1
   WORKER_MS="$(oc -n openshift-machine-api get machineset -o name | grep worker)"
   ocp_scale_machineset 1 "${WORKER_MS}"
 }
 
+################ macro functions ################
+
 setup_operator_devspaces(){
-  # setup devspaces
+  # setup devspaces operator
   oc apply -k components/operators/devspaces/operator/overlays/stable
-  wait_for_crd checlusters.org.eclipse.che
-  oc apply -k components/operators/devspaces/instance/overlays/default
+  k8s_wait_for_crd checlusters.org.eclipse.che
+  oc apply -k components/operators/devspaces/instance/overlays/timeout-12m
 }
 
 setup_operator_nfd(){
   # setup nfd operator
   oc apply -k components/operators/nfd/operator/overlays/stable
-  wait_for_crd nodefeaturediscoveries.nfd.openshift.io
+  k8s_wait_for_crd nodefeaturediscoveries.nfd.openshift.io
   oc apply -k components/operators/nfd/instance/overlays/only-nvidia
 }
 
 setup_operator_nvidia(){
   # setup nvidia gpu operator
   oc apply -k components/operators/gpu-operator-certified/operator/overlays/stable
-  wait_for_crd clusterpolicies.nvidia.com
+  k8s_wait_for_crd clusterpolicies.nvidia.com
   oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing-4
 }
 
 setup_operator_pipelines(){
   # setup tekton operator
   oc apply -k components/operators/openshift-pipelines-operator-rh/operator/overlays/latest
-  wait_for_crd pipelines.tekton.dev
-}
-
-setup_operator_devspaces(){
-  # setup devspaces
-  oc apply -k components/operators/devspaces/operator/overlays/stable
-  wait_for_crd checlusters.org.eclipse.che
-  oc apply -k components/operators/devspaces/instance/overlays/timeout-12m
+  k8s_wait_for_crd pipelines.tekton.dev
 }
 
 setup_namespaces(){
@@ -230,7 +243,7 @@ setup_namespaces(){
 check_cluster_version(){
   OCP_VERSION=$(oc version | sed -n '/Server Version: / s/Server Version: //p')
   AVOID_VERSIONS=()
-  TESTED_VERSIONS=("4.12.33")
+  TESTED_VERSIONS=("4.12.12" "4.12.33")
 
   echo "Current OCP version: ${OCP_VERSION}"
   echo "Tested OCP version(s): ${TESTED_VERSIONS[*]}"
@@ -245,17 +258,19 @@ check_cluster_version(){
   fi
 }
 
+################ demo functions ################
+
 setup_demo(){
   check_cluster_version
   setup_operator_nfd
   setup_operator_nvidia
-  setup_dashboard_nvidia_monitor
-  setup_dashboard_nvidia_admin
+  nvidia_setup_dashboard_monitor
+  nvidia_setup_dashboard_admin
   usage
 }
 
 is_sourced && check_shell && return
 
-check_oc_login
+ocp_check_login
 
 setup_demo

@@ -22,7 +22,7 @@ Familarity with Kustomize will be helpful. This folder contains various ~~secret
 - OpenShift Dev Spaces 3.8.0+ (optional)
 - Internet access
 
-Red Hat Demo Platform Catalog Options
+Red Hat Demo Platform Catalog (RHDP) options:
 
 - `MLOps Demo: Data Science & Edge Practice`
 - `Red Hat OpenShift Container Platform 4 Demo`
@@ -34,7 +34,7 @@ Setup cluster GPU operators
 scripts/bootstrap.sh
 ```
 
-## Other Commands
+## Various Commands
 
 AWS autoscaling w/ OpenShift Dev Spaces
 
@@ -45,7 +45,7 @@ AWS autoscaling w/ OpenShift Dev Spaces
 . scripts/bootstrap.sh
 
 # aws gpu - basic autoscaling
-setup_aws_cluster_autoscaling
+ocp_aws_cluster_autoscaling
 
 # deploy devspaces
 setup_operator_devspaces
@@ -88,10 +88,6 @@ Watch cluster autoscaler logs
 oc -n openshift-machine-api logs -f deploy/cluster-autoscaler-default
 ```
 
-## Nvidia MIG profiles
-
-*NOTE: MIG demo currently a WIP for RHDP - there be dragons here*
-
 Manually label nodes as GPU
 
 ```
@@ -99,45 +95,8 @@ NODE=worker1.ocp.run
   oc label node/${NODE} --overwrite "node-role.kubernetes.io/gpu="
 ```
 
-Setup MIG profile
-
-```
-. scripts/bootstrap.sh
-
-# setup MIG single
-# ex: nvidia.com/gpu: 1
-setup_mig_config_nvidia single all-1g.5gb
-setup_mig_config_nvidia single all-2g.10gb
-
-# setup MIG mixed
-# ex: nvidia.com/mig-2g.10gb: 1
-setup_mig_config_nvidia mixed all-balanced
-```
-
-Manually Pick MIG profile
-
-```
-# mode = single / mixed
-MIG_CONFIG=all-1g.5gb
-MIG_CONFIG=all-2g.10gb
-
-# mode = mixed 
-MIG_CONFIG=all-balanced
-```
-
-Manually apply MIG partitioning profile(s) - Mixed
-
-```
-# add profile label
-oc label node --overwrite \
-  -l "node-role.kubernetes.io/gpu" \
-  "nvidia.com/mig.config=${MIG_CONFIG}"
-
-# remove profile label
-oc label node --overwrite \
-  -l "node-role.kubernetes.io/gpu" \
-  "nvidia.com/mig.config-"
-```
+## Other Instructions
+[Nvidia Multi Instance GPU (MIG) on OpenShift](MIG.md)
 
 ## Links
 
