@@ -33,9 +33,13 @@ get_script_path
 
 usage(){
   echo "
-  If you want to setup autoscaling in AWS run the following:
+  Run the following to setup autoscaling in AWS:
   
-    . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
+  . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
+
+  Run the following to setup devspaces:
+
+  . scripts/bootstrap.sh && setup_operator_devspaces
 
   "
 }
