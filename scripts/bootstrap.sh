@@ -88,7 +88,9 @@ ocp_aws_create_gpu_machineset(){
   # a100 (MIG): p4d.24xlarge
   # h100 (MIG): p5.48xlarge
   INSTANCE_TYPE=${1:-g4dn.4xlarge}
-  MACHINE_SET=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep worker | head -n1)
+  MACHINE_SET=${2:-$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep worker | head -n1)}
+
+  echo "MACHINE_SET: ${MACHINE_SET}"
 
   # check for an existing gpu machine set
   oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep gpu || \
@@ -181,7 +183,7 @@ nvidia_setup_mig_config(){
   MIG_MODE=${1:-single}
   MIG_CONFIG=${1:-all-1g.5gb}
 
-  ocp_aws_create_gpu_machineset p4d.24xlarge
+  ocp_aws_create_gpu_machineset p4d.24xlarge "$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep worker | grep east-2b | head -n1)"
 
   oc apply -k components/operators/gpu-operator-certified/instance/overlays/mig-"${MIG_MODE}"
 
