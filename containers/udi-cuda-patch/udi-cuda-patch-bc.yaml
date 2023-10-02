@@ -25,9 +25,6 @@ spec:
         alternatives --set python /usr/bin/python3.11 && \
         yum clean all && \
         rm -rf /var/cache/yum/*
-
-      # RUN CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)")) && \
-      #     export LD_LIBRARY_PATH=$CUDNN_PATH/lib:$LD_LIBRARY_PATH
       
       USER 1001
   strategy:

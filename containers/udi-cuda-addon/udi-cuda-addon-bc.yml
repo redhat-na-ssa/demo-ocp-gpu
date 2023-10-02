@@ -7,7 +7,7 @@ spec:
   source:
     type: Git
     git:
-      uri: 'https://github.com/redhat-na-ssa/demo-ocp-gpt2-keras-nlp.git'
+      uri: 'https://github.com/redhat-na-ssa/demo-ocp-gpu.git'
     contextDir: /containers/udi-cuda-addon
   strategy:
     type: Docker
