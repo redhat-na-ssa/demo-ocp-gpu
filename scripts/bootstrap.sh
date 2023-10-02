@@ -266,6 +266,7 @@ setup_demo(){
   setup_operator_nvidia
   nvidia_setup_dashboard_monitor
   nvidia_setup_dashboard_admin
+  setup_namespaces
   usage
 }
 
