@@ -106,6 +106,8 @@ NODE=worker1.ocp.run
 - [Docs - Nvidia GPU admin dashboard](https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html)
 - [Docs - Multi Instance GPU (MIG) in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/mig-ocp.html)
 - [Docs - Time Slicing in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/time-slicing-gpus-in-openshift.html)
+- [Docs - KB GPU Autoscaling](https://access.redhat.com/solutions/6055181)
+  - [Docs - cluster-api/accelerator label](https://bugzilla.redhat.com/show_bug.cgi?id=1943194#c85)
 - [Blog - RH Nvidia GPUs on OpenShift](https://cloud.redhat.com/blog/autoscaling-nvidia-gpus-on-red-hat-openshift)
 - [Demo - bkoz GPU DevSpaces](https://github.com/bkoz/devspaces)
 - [GPU Operator default config map](https://gitlab.com/nvidia/kubernetes/gpu-operator/-/blob/v23.6.1/assets/state-mig-manager/0400_configmap.yaml?ref_type=tags)
