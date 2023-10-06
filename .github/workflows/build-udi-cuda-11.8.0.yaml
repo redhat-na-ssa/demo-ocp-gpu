@@ -12,10 +12,10 @@ on:  # yamllint disable-line rule:truthy
     branches: ["*"]
     # Publish semver tags as releases.
     # tags: ["v*.*.*"]
-    paths: ["containers/udi-cuda/11.8.0/**"]
+    paths: ["containers/udi-cuda/ubi8/**"]
   pull_request:
     branches: ["main"]
-    paths: ["containers/udi-cuda/11.8.0/**"]
+    paths: ["containers/udi-cuda/ubi8/**"]
 
 env:
   IMAGE_NAME: udi-cuda
@@ -69,11 +69,11 @@ jobs:
       - name: Build and push runtime
         uses: docker/build-push-action@v5.0.0
         with:
-          context: containers/${{ steps.prep.outputs.name }}/11.8.0/ubi8/cudnn8/runtime
-          file: containers/${{ steps.prep.outputs.name }}/11.8.0/ubi8/cudnn8/runtime/Dockerfile
+          context: containers/${{ steps.prep.outputs.name }}/ubi8
+          file: containers/${{ steps.prep.outputs.name }}/ubi8/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}
+            IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn8-runtime-ubi8
             TARGETARCH=amd64
           tags: ${{ steps.prep.outputs.tags }}-cudnn8-runtime-ubi8
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn8-runtime-ubi8
@@ -82,11 +82,11 @@ jobs:
       - name: Build and push devel
         uses: docker/build-push-action@v5.0.0
         with:
-          context: containers/${{ steps.prep.outputs.name }}/11.8.0/ubi8/cudnn8/devel
-          file: containers/${{ steps.prep.outputs.name }}/11.8.0/ubi8/cudnn8/devel/Dockerfile
+          context: containers/${{ steps.prep.outputs.name }}/ubi8
+          file: containers/${{ steps.prep.outputs.name }}/ubi8/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}
+            IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn8-devel-ubi8
+          tags: ${{ steps.prep.outputs.tags }}-cudnn8-devel-ubi8,${{ steps.prep.outputs.version }}:latest
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8

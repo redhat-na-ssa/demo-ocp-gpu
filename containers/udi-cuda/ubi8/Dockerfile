@@ -1,5 +1,9 @@
 # syntax=docker/dockerfile:1.3-labs
-FROM docker.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubi8
+ARG IMAGE_NAME=docker.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubi8
+FROM ${IMAGE_NAME}
+
+# cherry picked from below
+# https://github.com/devfile/developer-images/blob/main/base/ubi8/Dockerfile
 
 LABEL maintainer="Red Hat, Inc."
 
