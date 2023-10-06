@@ -65,4 +65,4 @@ ENV NVIDIA_PRODUCT_NAME="CUDA"
 
 USER 1001
 
-ENTRYPOINT ["/opt/nvidia/nvidia_entrypoint.sh"]
+# ENTRYPOINT ["/opt/nvidia/nvidia_entrypoint.sh"]
