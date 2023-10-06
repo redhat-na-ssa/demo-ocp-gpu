@@ -19,7 +19,8 @@ podman build . -t udi-cuda:12.2.0-devel-ubi8 --build-arg IMAGE_NAME=udi-cuda
 
 ## Links
 
-- [Container Source - cuda/dist/12.2.0/ubi8/base](https://gitlab.com/nvidia/container-images/cuda.git)
+- [Nvidia Container Source - cuda/dist/12.2.0/ubi8/base](https://gitlab.com/nvidia/container-images/cuda.git)
+- [Dev Spaces - Developer Images](https://github.com/devfile/developer-images)
 
 ## Notes
 
