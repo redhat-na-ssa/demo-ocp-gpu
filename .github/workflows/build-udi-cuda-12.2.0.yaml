@@ -12,7 +12,7 @@ on:  # yamllint disable-line rule:truthy
     branches: ["*"]
     # Publish semver tags as releases.
     # tags: ["v*.*.*"]
-    paths: ["containers/udi-cuda/**"]
+    # paths: ["containers/udi-cuda/**"]
   pull_request:
     branches: ["main"]
     paths: ["containers/udi-cuda/**"]
