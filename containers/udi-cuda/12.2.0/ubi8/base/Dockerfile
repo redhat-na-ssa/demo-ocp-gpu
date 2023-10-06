@@ -1,7 +1,7 @@
 # FROM registry.access.redhat.com/ubi8/ubi:latest as base
-ARG BASE_IMAGE=quay.io/devfile/base-developer-image:ubi8-latest
+ARG IMAGE_NAME=quay.io/devfile/base-developer-image:ubi8-latest
 ARG TARGETARCH=amd64
-FROM ${BASE_IMAGE} as base
+FROM ${IMAGE_NAME} as base
 
 USER 0
 
