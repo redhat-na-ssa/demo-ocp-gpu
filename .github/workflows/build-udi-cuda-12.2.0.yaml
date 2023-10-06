@@ -73,7 +73,7 @@ jobs:
           file: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/base/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            BASE_IMAGE=quay.io/devfile/base-developer-image:ubi8-latest,
+            BASE_IMAGE=quay.io/devfile/base-developer-image:ubi8-latest
             TARGETARCH=amd64
           tags: ${{ steps.prep.outputs.tags }}-base-ubi8
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-base-ubi8
