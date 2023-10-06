@@ -13,16 +13,15 @@ LABEL io.openshift.expose-services=""
 
 USER 0
 
+# install: common tools
 RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     dnf install -y bash curl diffutils git git-lfs iproute jq less lsof man nano procps p7zip p7zip-plugins \
                    perl-Digest-SHA net-tools openssh-clients rsync socat sudo time vim wget zip && \
-                   dnf clean all
+                   dnf clean all && \
+                   rm -rf /var/cache/yum/*
 
-# install: python
-# todo: remove to other Dockerfile
-RUN yum install -y libGL python39 bash-completion && \
-    alternatives --set python /usr/bin/python3.9 && \
-    ln -sf /usr/bin/pip3.9 /usr/bin/pip && \
+# install: other bins
+RUN yum install -y libGL bash-completion && \
     yum clean all && \
     rm -rf /var/cache/yum/*
 
