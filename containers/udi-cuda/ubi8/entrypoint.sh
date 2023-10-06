@@ -18,4 +18,24 @@ if ! whoami &> /dev/null; then
   fi
 fi
 
+# fix: path for local bin
+# todo: move to /etc/skel/.bashrc
+export PATH=$PATH:${HOME}/.local/bin
+
+# kludge: initalize home
+cp -an /etc/skel/.{bash,profile,gitconfig}* ${HOME} 2>/dev/null || true
+
+# fix: ssh perms
+# address issue for some storage classes
+# where sticky bit in home modifies
+# .ssh folder on pod restarts
+if [ -f ${HOME}/.ssh/id_rsa ]; then
+    chmod 700 ${HOME}/.ssh
+    chmod 600 ${HOME}/.ssh/id_rsa*
+
+    if [ -f ${HOME}/.ssh/known_hosts ]; then
+        chmod 600 ${HOME}/.ssh/known_hosts
+    fi
+fi
+
 exec "$@"
