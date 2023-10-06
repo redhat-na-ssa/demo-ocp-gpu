@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.3-labs
-FROM docker.io/nvidia/cuda:11.8.0-devel-ubi8
+FROM docker.io/nvidia/cuda:11.8.0-cudnn8-devel-ubi8
 
 LABEL maintainer="Red Hat, Inc."
 
