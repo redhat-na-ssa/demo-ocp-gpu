@@ -1,6 +1,3 @@
-ARG IMAGE_NAME=udi-cuda
-ARG TARGETARCH=amd64
-
 FROM ${IMAGE_NAME}:12.2.0-base-ubi8 as base
 
 ENV NV_CUDA_LIB_VERSION 12.2.0-1

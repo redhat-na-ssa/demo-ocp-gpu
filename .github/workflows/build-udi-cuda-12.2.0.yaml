@@ -72,6 +72,9 @@ jobs:
           context: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/base
           file: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/base/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          build-args:
+            BASE_IMAGE=quay.io/devfile/base-developer-image:ubi8-latest
+            TARGETARCH=amd64
           tags: ${{ steps.prep.outputs.tags }}-base-ubi8
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-base-ubi8
 
@@ -83,7 +86,8 @@ jobs:
           file: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/runtime/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args:
-            IMAGE_NAME=${{ steps.prep.outputs.tags }}-base-ubi8
+            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}
+            TARGETARCH=amd64
           tags: ${{ steps.prep.outputs.tags }}-runtime-ubi8
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-runtime-ubi8
 
@@ -95,6 +99,7 @@ jobs:
           file: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/devel/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args:
-            IMAGE_NAME=${{ steps.prep.outputs.tags }}-runtime-ubi8
+            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}
+            TARGETARCH=amd64
           tags: ${{ steps.prep.outputs.tags }}-devel-ubi8
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-devel-ubi8

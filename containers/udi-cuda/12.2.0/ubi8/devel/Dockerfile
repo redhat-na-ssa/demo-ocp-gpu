@@ -1,6 +1,3 @@
-ARG IMAGE_NAME=udi-cuda
-ARG TARGETARCH=amd64
-
 ARG IMAGE_NAME
 FROM ${IMAGE_NAME}:12.2.0-runtime-ubi8 as base
 
