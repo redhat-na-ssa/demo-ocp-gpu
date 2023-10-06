@@ -14,7 +14,7 @@ LABEL io.openshift.expose-services=""
 USER 0
 
 # install: python
-RUN yum install -y python311 && \
+RUN yum install -y python311 python3.11-pip && \
     alternatives --set python /usr/bin/python3.11 && \
     ln -sf /usr/bin/pip3.11 /usr/bin/pip && \
     yum clean all && \
