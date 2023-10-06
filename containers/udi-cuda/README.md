@@ -9,7 +9,7 @@ cd containers/udi-cuda/12.2.0/ubi8
 
 podman build . \
   -t udi-cuda:12.2.0-runtime-ubi8 \
-  --build-arg IMAGE_NAME=docker.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubi8
+  --build-arg IMAGE_NAME=docker.io/nvidia/cuda:11.8.0-cudnn8-devel-ubi8
 ```
 
 ## Links

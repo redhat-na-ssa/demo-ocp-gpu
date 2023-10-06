@@ -18,25 +18,6 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
                    perl-Digest-SHA net-tools openssh-clients rsync socat sudo time vim wget zip && \
                    dnf clean all
 
-# install: entrypoint
-COPY --chown=0:0 entrypoint.sh /
-RUN \
-    # add user
-    useradd -u 1001 \
-      -G wheel,root \
-      -d /home/user \
-      --shell /bin/bash \
-      -m user && \
-    # Setup $PS1 for a consistent and reasonable prompt
-    echo "export PS1='\W \`git branch --show-current 2>/dev/null | sed -r -e \"s@^(.+)@\(\1\) @\"\`$ '" >> /etc/skell/.bashrc && \
-    # Copy the global git configuration to user config as global /etc/gitconfig
-    #  file may be overwritten by a mounted file at runtime
-    cp /etc/gitconfig /etc/skel/.gitconfig && \
-    # Set permissions on /etc/passwd and /home to allow arbitrary users to write
-    chgrp -R 0 /home && \
-    chmod -R g=u /etc/passwd /etc/group /home && \
-    chmod +x /entrypoint.sh
-
 # install: python
 RUN yum install -y libGL python39 bash-completion && \
     alternatives --set python /usr/bin/python3.9 && \
@@ -45,17 +26,38 @@ RUN yum install -y libGL python39 bash-completion && \
     rm -rf /var/cache/yum/*
 
 # install: oc,tkn
+# todo: install cli tools during env init / not in container
 ARG OC4_URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux.tar.gz"
 ARG TKN_URL="https://mirror.openshift.com/pub/openshift-v4/clients/pipeline/latest/tkn-linux-amd64.tar.gz"
 
 RUN curl -sL "${OC4_URL}" | \
       tar -C /usr/local/bin -vzxf- oc kubectl && \
       /usr/local/bin/oc completion bash > /etc/bash_completion.d/oc && \
-      echo "source /etc/bash_completion.d/oc" >> /home/user/.bashrc && \
+      echo "source /etc/bash_completion.d/oc" >> /etc/skel/.bashrc && \
     curl -sL "${TKN_URL}" | \
-      tar -C /usr/local/bin -vzxf- tkn && \
+      tar -C /usr/local/bin -vzxf- --no-same-owner tkn && \
       /usr/local/bin/tkn completion bash > /etc/bash_completion.d/tkn && \
-      echo "source /etc/bash_completion.d/tkn" >> /home/user/.bashrc
+      echo "source /etc/bash_completion.d/tkn" >> /etc/skel/.bashrc
+
+# install: entrypoint
+COPY --chown=0:0 entrypoint.sh /
+
+# setup: user
+RUN \
+    useradd -u 1001 \
+      -G wheel,root \
+      -d /home/user \
+      --shell /bin/bash \
+      -m user && \
+    # Setup $PS1 for a consistent and reasonable prompt
+    echo "export PS1='\W \`git branch --show-current 2>/dev/null | sed -r -e \"s@^(.+)@\(\1\) @\"\`$ '" >> /etc/skel/.bashrc && \
+    # Copy the global git configuration to user config as global /etc/gitconfig
+    #  file may be overwritten by a mounted file at runtime
+    cp /etc/gitconfig /etc/skel/.gitconfig && \
+    # Set permissions on /etc/passwd and /home to allow arbitrary users to write
+    chgrp -R 0 /home && \
+    chmod -R g=u /etc/passwd /etc/group /home && \
+    chmod +x /entrypoint.sh
 
 USER 1001
 ENV HOME=/home/user
@@ -63,4 +65,4 @@ VOLUME /home/user
 
 WORKDIR /projects
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD ["tail", "-f", "/dev/null"]
+CMD ["sleep", "infinity"]

@@ -38,4 +38,13 @@ if [ -f ${HOME}/.ssh/id_rsa ]; then
     fi
 fi
 
-exec "$@"
+# notice: show attribution
+NVIDIA_ENTRYPOINT=/opt/nvidia/nvidia_entrypoint.sh
+
+[ -e /NGC-DL-CONTAINER-LICENSE ] && cat /NGC-DL-CONTAINER-LICENSE
+
+if [ -e "${NVIDIA_ENTRYPOINT}" ]; then
+  "${NVIDIA_ENTRYPOINT}" "$@"
+else
+  exec "$@"
+fi
