@@ -111,3 +111,18 @@ NODE=worker1.ocp.run
 - [Blog - RH Nvidia GPUs on OpenShift](https://cloud.redhat.com/blog/autoscaling-nvidia-gpus-on-red-hat-openshift)
 - [Demo - bkoz GPU DevSpaces](https://github.com/bkoz/devspaces)
 - [GPU Operator default config map](https://gitlab.com/nvidia/kubernetes/gpu-operator/-/blob/v23.6.1/assets/state-mig-manager/0400_configmap.yaml?ref_type=tags)
+
+## Container License
+
+`udi-cuda` images from [HERE](https://github.com/redhat-na-ssa/demo-ocp-gpu/pkgs/container/udi-cuda) are based on [official NVIDIA CUDA images](https://hub.docker.com/r/nvidia/cuda). 
+
+Please be aware of any of the associated terms and conditions.
+
+```
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+```
