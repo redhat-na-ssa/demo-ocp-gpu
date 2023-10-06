@@ -19,7 +19,8 @@ components:
             nvidia.com/gpu: '1'
       controller.devfile.io/merge-contribution: true
     container:
-      image: ghcr.io/redhat-na-ssa/udi-cuda:latest
+      # image: ghcr.io/redhat-na-ssa/udi-cuda:latest
+      image: ghcr.io/redhat-na-ssa/udi-cuda:12.2.0-devel-ubi8
       memoryLimit: 2G
       cpuLimit: 1000m
       mountSources: true
