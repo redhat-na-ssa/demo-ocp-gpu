@@ -117,7 +117,7 @@ jobs:
           file: containers/python/ubi8/3.11/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-devel-ubi8
+            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}:${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8
             TARGETARCH=amd64
           tags: ${{ steps.prep.outputs.tags }}-devel-ubi8-python311
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-devel-ubi8-python311
