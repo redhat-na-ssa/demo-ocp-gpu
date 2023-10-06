@@ -66,24 +66,26 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       # https://github.com/docker/build-push-action
-      - name: Build base
+      - name: Build and push base
         uses: docker/build-push-action@v5.0.0
         with:
           context: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/base
           file: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/base/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}-base-ubi8
-          labels: org.opencontainers.image.version=12.2.0-base-ubi8
+          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-base-ubi8
 
       # https://github.com/docker/build-push-action
-      - name: Build runtime
+      - name: Build and push runtime
         uses: docker/build-push-action@v5.0.0
         with:
           context: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/runtime
           file: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/runtime/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          build-args:
+            IMAGE_NAME=${{ steps.prep.outputs.tags }}-base-ubi8
           tags: ${{ steps.prep.outputs.tags }}-runtime-ubi8
-          labels: org.opencontainers.image.version=12.2.0-runtime-ubi8
+          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-runtime-ubi8
 
               # https://github.com/docker/build-push-action
       - name: Build and push devel
@@ -92,5 +94,7 @@ jobs:
           context: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/devel
           file: containers/${{ steps.prep.outputs.name }}/12.2.0/ubi8/devel/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          build-args:
+            IMAGE_NAME=${{ steps.prep.outputs.tags }}-runtime-ubi8
           tags: ${{ steps.prep.outputs.tags }}-devel-ubi8
-          labels: org.opencontainers.image.version=12.2.0-devel-ubi8
+          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-devel-ubi8
