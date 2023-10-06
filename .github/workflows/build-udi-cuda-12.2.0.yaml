@@ -13,6 +13,7 @@ on:  # yamllint disable-line rule:truthy
     # Publish semver tags as releases.
     # tags: ["v*.*.*"]
     paths:
+      - ".github/workflows/**"
       - "containers/udi-cuda/ubi8/**"
       - "containers/python/ubi8/**"
   pull_request:
