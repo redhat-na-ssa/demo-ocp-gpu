@@ -51,8 +51,8 @@ RUN \
       -m user && \
     # Setup $PS1 for a consistent and reasonable prompt
     echo "export PS1='\W \`git branch --show-current 2>/dev/null | sed -r -e \"s@^(.+)@\(\1\) @\"\`$ '" >> /etc/skel/.bashrc && \
-    echo 'NVIDIA_ENTRYPOINT=/opt/nvidia/nvidia_entrypoint.sh' >> /etc/skel/.bashrc && \
-    echo '[ -e "${NVIDIA_ENTRYPOINT}" ] && "${NVIDIA_ENTRYPOINT}"' >> /etc/skel/.bashrc && \
+    echo 'NVIDIA_ENTRYPOINT=/opt/nvidia/entrypoint.d' >> /etc/skel/.bashrc && \
+    echo '[ -d "${NVIDIA_ENTRYPOINT}" ] && cat "${NVIDIA_ENTRYPOINT}"/*.txt' >> /etc/skel/.bashrc && \
     # Copy the global git configuration to user config as global /etc/gitconfig
     #  file may be overwritten by a mounted file at runtime
     cp /etc/gitconfig /etc/skel/.gitconfig && \
