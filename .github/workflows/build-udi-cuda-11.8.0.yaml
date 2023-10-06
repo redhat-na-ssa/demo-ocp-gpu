@@ -12,10 +12,14 @@ on:  # yamllint disable-line rule:truthy
     branches: ["*"]
     # Publish semver tags as releases.
     # tags: ["v*.*.*"]
-    paths: ["containers/udi-cuda/ubi8/**"]
+    paths:
+      - "containers/udi-cuda/ubi8/**"
+      - "containers/python/ubi8/**"
   pull_request:
     branches: ["main"]
-    paths: ["containers/udi-cuda/ubi8/**"]
+    paths:
+      - "containers/udi-cuda/ubi8/**"
+      - "containers/python/ubi8/**"
 
 env:
   IMAGE_NAME: udi-cuda
@@ -88,5 +92,31 @@ jobs:
           build-args: |
             IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn8-devel-ubi8,${{ steps.prep.outputs.ghcr_image }}:latest
+          tags: ${{ steps.prep.outputs.tags }}-cudnn8-devel-ubi8
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8
+
+      # https://github.com/docker/build-push-action
+      - name: Build and push devel python 3.9
+        uses: docker/build-push-action@v5.0.0
+        with:
+          context: containers/python/ubi8/3.9
+          file: containers/python/ubi8/3.9/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          build-args: |
+            IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8
+            TARGETARCH=amd64
+          tags: ${{ steps.prep.outputs.tags }}-cudnn8-devel-ubi8-python39,${{ steps.prep.outputs.ghcr_image }}:latest
+          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8
+
+      # # https://github.com/docker/build-push-action
+      # - name: Build and push devel python 3.11
+      #   uses: docker/build-push-action@v5.0.0
+      #   with:
+      #     context: containers/python/ubi8/3.11
+      #     file: containers/python/ubi8/3.11/Dockerfile
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     build-args: |
+      #       IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8
+      #       TARGETARCH=amd64
+      #     tags: ${{ steps.prep.outputs.tags }}-cudnn8-devel-ubi8-python311,${{ steps.prep.outputs.ghcr_image }}:latest
+      #     labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8

@@ -19,9 +19,10 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
                    dnf clean all
 
 # install: python
+# todo: remove to other Dockerfile
 RUN yum install -y libGL python39 bash-completion && \
     alternatives --set python /usr/bin/python3.9 && \
-    ln -s /usr/bin/pip3.9 /usr/bin/pip && \
+    ln -sf /usr/bin/pip3.9 /usr/bin/pip && \
     yum clean all && \
     rm -rf /var/cache/yum/*
 
