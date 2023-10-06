@@ -37,6 +37,27 @@ RUN yum install -y \
     && yum clean all \
     && rm -rf /var/cache/yum/*
 
+# install python
+RUN yum install -y libGL python39 bash-completion && \
+    alternatives --set python /usr/bin/python3.9 && \
+    ln -s /usr/bin/pip3.9 /usr/bin/pip && \
+    yum clean all && \
+    rm -rf /var/cache/yum/*
+
+# install: oc,tkn
+ARG OC4_URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux.tar.gz"
+ARG TKN_URL="https://mirror.openshift.com/pub/openshift-v4/clients/pipeline/latest/tkn-linux-amd64.tar.gz"
+
+RUN curl -sL "${OC4_URL}" | \
+      tar -C /usr/local/bin -vzxf- oc kubectl && \
+      /usr/local/bin/oc completion bash > /etc/bash_completion.d/oc && \
+      echo "source /etc/bash_completion.d/oc" >> /home/user/.bashrc && \
+    curl -sL "${TKN_URL}" | \
+      tar -C /usr/local/bin -vzxf- tkn && \
+      /usr/local/bin/tkn completion bash > /etc/bash_completion.d/tkn && \
+      echo "source /etc/bash_completion.d/tkn" >> /home/user/.bashrc
+
+
 # Add entrypoint items
 COPY entrypoint.d/ /opt/nvidia/entrypoint.d/
 COPY nvidia_entrypoint.sh /opt/nvidia/
