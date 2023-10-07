@@ -1,5 +1,8 @@
 # Info
 
+Universal Developer Images (UDI) are containers that can be used
+in OpenShift Dev Spaces.
+
 Containers usable for Dev Spaces can use the [upstream container
 build from Nvidia](https://hub.docker.com/r/nvidia/cuda)
 
