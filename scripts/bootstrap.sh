@@ -53,6 +53,13 @@ is_sourced() {
   return 1  # NOT sourced.
 }
 
+until_true(){
+  until "$@"
+  do
+    "$@"
+    sleep 1
+  done
+}
 
 ocp_check_login(){
   oc cluster-info | head -n1
