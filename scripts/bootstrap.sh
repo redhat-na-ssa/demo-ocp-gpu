@@ -54,9 +54,8 @@ is_sourced() {
 }
 
 until_true(){
-  until "$@"
+  until "${@}"
   do
-    "$@"
     sleep 1
   done
 }
@@ -280,11 +279,12 @@ check_cluster_version(){
 
 setup_demo(){
   check_cluster_version
-  setup_operator_nfd
-  setup_operator_nvidia
-  nvidia_setup_dashboard_monitor
-  nvidia_setup_dashboard_admin
-  setup_namespaces
+  # setup_operator_nfd
+  # setup_operator_nvidia
+  # nvidia_setup_dashboard_monitor
+  # nvidia_setup_dashboard_admin
+  # setup_namespaces
+  until_true oc apply -k gitops
   usage
 }
 
