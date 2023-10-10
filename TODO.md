@@ -4,7 +4,7 @@
 - [x] Create Nvidia GPU MIG config
 - [x] Setup OpenShift console plugins for Nvidia
 - [ ] Show use of taints and tolerations
-- [ ] Document offline install of Nvidia GPU Operator
+- [ ] Document [offline install](https://github.com/jharmison-redhat/oc-mirror-e2e) of Nvidia GPU Operator
 - [ ] Make bash functions kustomization
 
 ## Notes
