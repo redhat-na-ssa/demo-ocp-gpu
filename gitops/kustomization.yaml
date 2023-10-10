@@ -17,8 +17,5 @@ resources:
   - ../components/operators/gpu-operator-certified/operator/overlays/stable
   - ../components/operators/gpu-operator-certified/instance/overlays/time-slicing-4
 
-  # setup tekton operator
-  - ../components/operators/openshift-pipelines-operator-rh/operator/overlays/latest
-
   # setup namespaces
   - ../components/configs/namespaces/overlays/default
