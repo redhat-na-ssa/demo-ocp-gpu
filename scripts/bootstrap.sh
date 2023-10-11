@@ -2,6 +2,8 @@
 # shellcheck disable=SC2015,SC1091,SC2119,SC2120
 set -e
 
+################# standard init #################
+
 check_shell(){
   [ -n "$BASH_VERSION" ] && return
   echo "Please verify you are running in bash shell"
@@ -29,20 +31,6 @@ check_shell
 check_git_root
 get_script_path
 
-################# standard init #################
-
-usage(){
-  echo "
-  Run the following to setup autoscaling in AWS:
-  
-  . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
-
-  Run the following to setup devspaces:
-
-  . scripts/bootstrap.sh && setup_operator_devspaces
-
-  "
-}
 
 is_sourced() {
   if [ -n "$ZSH_VERSION" ]; then
@@ -52,6 +40,8 @@ is_sourced() {
   fi
   return 1  # NOT sourced.
 }
+
+############ cherry picked functions ############
 
 until_true(){
   echo "Running:" "${@}"
@@ -63,7 +53,6 @@ until_true(){
 
   echo "[OK]"
 }
-
 
 ocp_check_login(){
   oc cluster-info | head -n1
@@ -227,7 +216,7 @@ ocp_aws_cluster_autoscaling(){
   ocp_scale_machineset 1 "${WORKER_MS}"
 }
 
-################ macro functions ################
+################ demo functions ################
 
 check_cluster_version(){
   OCP_VERSION=$(oc version | sed -n '/Server Version: / s/Server Version: //p')
@@ -247,7 +236,20 @@ check_cluster_version(){
   fi
 }
 
-################ demo functions ################
+usage(){
+  echo "
+  Run the following to setup autoscaling in AWS:
+  
+  . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
+
+  Run the following to setup devspaces:
+
+  . scripts/bootstrap.sh && setup_operator_devspaces
+
+  "
+}
+
+################## main area ###################
 
 setup_demo(){
   check_cluster_version
