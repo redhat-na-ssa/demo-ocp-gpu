@@ -252,6 +252,7 @@ usage(){
 ################## main area ###################
 
 setup_demo(){
+  check_shell
   check_cluster_version
   until_true oc apply -k kustomize
   usage
