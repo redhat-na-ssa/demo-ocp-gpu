@@ -54,11 +54,16 @@ is_sourced() {
 }
 
 until_true(){
+  echo "Running:" "${@}"
   until "${@}"
   do
     sleep 1
+    echo "and again..."
   done
+
+  echo "[OK]"
 }
+
 
 ocp_check_login(){
   oc cluster-info | head -n1
@@ -224,39 +229,6 @@ ocp_aws_cluster_autoscaling(){
 
 ################ macro functions ################
 
-setup_operator_devspaces(){
-  # setup devspaces operator
-  oc apply -k components/operators/devspaces/operator/overlays/stable
-  k8s_wait_for_crd checlusters.org.eclipse.che
-  k8s_wait_for_crd devworkspaceoperatorconfigs.controller.devfile.io
-  oc apply -k components/operators/devspaces/instance/overlays/timeout-12m
-}
-
-setup_operator_nfd(){
-  # setup nfd operator
-  oc apply -k components/operators/nfd/operator/overlays/stable
-  k8s_wait_for_crd nodefeaturediscoveries.nfd.openshift.io
-  oc apply -k components/operators/nfd/instance/overlays/only-nvidia
-}
-
-setup_operator_nvidia(){
-  # setup nvidia gpu operator
-  oc apply -k components/operators/gpu-operator-certified/operator/overlays/stable
-  k8s_wait_for_crd clusterpolicies.nvidia.com
-  oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing-4
-}
-
-setup_operator_pipelines(){
-  # setup tekton operator
-  oc apply -k components/operators/openshift-pipelines-operator-rh/operator/overlays/latest
-  k8s_wait_for_crd pipelines.tekton.dev
-}
-
-setup_namespaces(){
-  # setup namespaces
-  oc apply -k components/configs/namespaces/overlays/default
-}
-
 check_cluster_version(){
   OCP_VERSION=$(oc version | sed -n '/Server Version: / s/Server Version: //p')
   AVOID_VERSIONS=()
@@ -279,12 +251,7 @@ check_cluster_version(){
 
 setup_demo(){
   check_cluster_version
-  # setup_operator_nfd
-  # setup_operator_nvidia
-  # nvidia_setup_dashboard_monitor
-  # nvidia_setup_dashboard_admin
-  # setup_namespaces
-  until_true oc apply -k gitops
+  until_true oc apply -k kustomize
   usage
 }
 
