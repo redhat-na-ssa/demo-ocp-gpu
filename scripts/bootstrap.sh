@@ -1,13 +1,15 @@
 #!/bin/bash
-# shellcheck disable=SC2015,SC1091,SC2119,SC2120
 set -e
 
-################# standard init #################
+# 8 seconds is usually enough time for the average user to realize they foobar
+export SLEEP_SECONDS=8
+
+################# start standard init #################
 
 check_shell(){
   [ -n "$BASH_VERSION" ] && return
   echo "Please verify you are running in bash shell"
-  sleep 10
+  sleep "${SLEEP_SECONDS:-8}"
 }
 
 check_git_root(){
@@ -26,11 +28,11 @@ get_script_path(){
   echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 }
 
-
 check_shell
 check_git_root
 get_script_path
 
+################# end standard init #################
 
 is_sourced() {
   if [ -n "$ZSH_VERSION" ]; then
@@ -39,19 +41,6 @@ is_sourced() {
       case ${0##*/} in dash|-dash|bash|-bash|ksh|-ksh|sh|-sh) return 0;; esac
   fi
   return 1  # NOT sourced.
-}
-
-############ cherry picked functions ############
-
-until_true(){
-  echo "Running:" "${@}"
-  until "${@}"
-  do
-    sleep 1
-    echo "and again..."
-  done
-
-  echo "[OK]"
 }
 
 ocp_check_login(){
@@ -65,6 +54,26 @@ ocp_check_info(){
 
   echo "NAMESPACE: $(oc project -q)"
   sleep "${SLEEP_SECONDS:-8}"
+}
+
+until_true(){
+  echo "Running:" "${@}"
+  until "${@}"
+  do
+    sleep 1
+    echo "and again..."
+  done
+
+  echo "[OK]"
+}
+
+fake_argocd(){
+  if [ ! -f "${1}/kustomization.yaml" ]; then
+    echo "Please provide a dir with \"kustomization.yaml\""
+    return
+  fi
+
+  until_true oc apply -k "${1}"
 }
 
 which oc >/dev/null && alias kubectl=oc
@@ -250,6 +259,20 @@ usage(){
 }
 
 ################## main area ###################
+
+usage(){
+  # tell us something useful
+  echo "
+  Run the following to setup autoscaling in AWS:
+  
+  . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
+
+  Run the following to setup devspaces:
+
+  . scripts/bootstrap.sh && setup_operator_devspaces
+
+  "
+}
 
 setup_demo(){
   check_shell
