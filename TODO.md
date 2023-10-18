@@ -7,7 +7,16 @@
 - [ ] Document [offline install](https://github.com/jharmison-redhat/oc-mirror-e2e) of Nvidia GPU Operator
 - [ ] Make bash functions kustomization
 
-## Notes
+## Offline Installer Notes
+
+This repo will aid in an offline install, but common issues will include:
+
+- [ ] Making container images available
+- [ ] Cloning this repo
+- [ ] Other software dependencies (ex: pip, maven)
+- [ ] Storage
+
+## General Notes
 
 The following config will allow autoscaling with Dev Spaces [HERE](components/operators/devspaces/instance/base/devworkspace-config.yaml)
 

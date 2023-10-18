@@ -16,13 +16,13 @@ Familarity with Kustomize will be helpful. This folder contains various ~~secret
 
 ## Prerequisites
 
-- Nvidia GPU hardware
+- Nvidia GPU hardware or cloud provider with GPU instances
 - OpenShift 4.11+ w/ cluster admin
+- [Internet access](TODO.md)
 - AWS (auto scaling, optional)
 - OpenShift Dev Spaces 3.8.0+ (optional)
-- Internet access
 
-Red Hat Demo Platform Catalog (RHDP) options:
+[Red Hat Demo Platform](https://demo.redhat.com) Catalog (RHDP) options:
 
 - `MLOps Demo: Data Science & Edge Practice`
 - `Red Hat OpenShift Container Platform 4 Demo`
@@ -30,6 +30,7 @@ Red Hat Demo Platform Catalog (RHDP) options:
 ## Quickstart
 
 Setup cluster GPU operators
+
 ```
 scripts/bootstrap.sh
 ```
@@ -96,6 +97,7 @@ NODE=worker1.ocp.run
 ```
 
 ## Other Instructions
+
 [Nvidia Multi Instance GPU (MIG) on OpenShift](MIG.md)
 
 ## Links
