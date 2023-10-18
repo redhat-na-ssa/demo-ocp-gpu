@@ -10,12 +10,12 @@ resources:
   - ../components/operators/devspaces/instance/overlays/timeout-12m
 
   # setup nfd operator
-  - ../components/operators/nfd/operator/overlays/stable
-  - ../components/operators/nfd/instance/overlays/only-nvidia
+  - operators/nfd/operator/overlays/stable
+  - operators/nfd/instance/overlays/only-nvidia
 
   # setup nvidia gpu operator
-  - ../components/operators/gpu-operator-certified/operator/overlays/stable
-  - ../components/operators/gpu-operator-certified/instance/overlays/time-slicing-4
+  - operators/gpu-operator-certified/operator/overlays/stable
+  - operators/gpu-operator-certified/instance/overlays/time-slicing-4
 
   # setup namespaces
-  - ../components/configs/namespaces/overlays/default
+  - configs/namespaces/overlays/default

@@ -277,7 +277,7 @@ usage(){
 setup_demo(){
   check_shell
   check_cluster_version
-  fake_argocd kustomize
+  fake_argocd components
   usage
 }
 
