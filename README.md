@@ -2,7 +2,7 @@
 
 Setup Nvidia GPUs on OpenShift with ease. This repo is intended as a foundation for GPU workloads on OpenShift.
 
-Initially `bootstrap.sh` configures GPU time-slicing which allows 4 workloads
+Initially `bootstrap.sh` configures GPU time-slicing which allows 2 workloads
 to share a single GPU.
 
 ### In addition
@@ -12,17 +12,17 @@ to share a single GPU.
 or [tensorflow](notebooks/00-test-gpu-tensorflow.ipynb)
 
 The [components](components) folder is intended for reuse with ArgoCD or OpenShift GitOps.
-Familarity with Kustomize will be helpful. This folder contains various ~~secret~~ recipes for `oc apply -k`.
+Familiarity with Kustomize will be helpful. This folder contains various ~~secret~~ recipes for `oc apply -k`.
 
 ## Prerequisites
 
-- Nvidia GPU hardware
+- Nvidia GPU hardware or cloud provider with GPU instances
 - OpenShift 4.11+ w/ cluster admin
+- [Internet access](TODO.md)
 - AWS (auto scaling, optional)
 - OpenShift Dev Spaces 3.8.0+ (optional)
-- Internet access
 
-Red Hat Demo Platform Catalog (RHDP) options:
+[Red Hat Demo Platform](https://demo.redhat.com) Catalog (RHDP) options:
 
 - `MLOps Demo: Data Science & Edge Practice`
 - `Red Hat OpenShift Container Platform 4 Demo`
@@ -30,6 +30,7 @@ Red Hat Demo Platform Catalog (RHDP) options:
 ## Quickstart
 
 Setup cluster GPU operators
+
 ```
 scripts/bootstrap.sh
 ```
@@ -44,7 +45,7 @@ AWS autoscaling w/ OpenShift Dev Spaces
 # aws gpu - load functions
 . scripts/bootstrap.sh
 
-# aws gpu - basic autoscaling
+# aws gpu - basic gpu autoscaling
 ocp_aws_cluster_autoscaling
 
 # deploy devspaces
@@ -60,7 +61,7 @@ oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/g
 Setup Time Slicing (2x)
 
 ```
-oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing-2
+oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-sliced-2
 ```
 
 Request / Test a GPU workload of 6 GPUs
@@ -96,6 +97,7 @@ NODE=worker1.ocp.run
 ```
 
 ## Other Instructions
+
 [Nvidia Multi Instance GPU (MIG) on OpenShift](MIG.md)
 
 ## Links

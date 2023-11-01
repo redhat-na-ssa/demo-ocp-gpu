@@ -1,11 +1,15 @@
 #!/bin/bash
-# shellcheck disable=SC2015,SC1091,SC2119,SC2120
 set -e
+
+# 8 seconds is usually enough time for the average user to realize they foobar
+export SLEEP_SECONDS=8
+
+################# start standard init #################
 
 check_shell(){
   [ -n "$BASH_VERSION" ] && return
   echo "Please verify you are running in bash shell"
-  sleep 10
+  sleep "${SLEEP_SECONDS:-8}"
 }
 
 check_git_root(){
@@ -24,25 +28,11 @@ get_script_path(){
   echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 }
 
-
 check_shell
 check_git_root
 get_script_path
 
-################# standard init #################
-
-usage(){
-  echo "
-  Run the following to setup autoscaling in AWS:
-  
-  . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
-
-  Run the following to setup devspaces:
-
-  . scripts/bootstrap.sh && setup_operator_devspaces
-
-  "
-}
+################# end standard init #################
 
 is_sourced() {
   if [ -n "$ZSH_VERSION" ]; then
@@ -52,7 +42,6 @@ is_sourced() {
   fi
   return 1  # NOT sourced.
 }
-
 
 ocp_check_login(){
   oc cluster-info | head -n1
@@ -67,13 +56,24 @@ ocp_check_info(){
   sleep "${SLEEP_SECONDS:-8}"
 }
 
-which oc >/dev/null && alias kubectl=oc
+apply_firmly(){
+  if [ ! -f "${1}/kustomization.yaml" ]; then
+    echo "Please provide a dir with \"kustomization.yaml\""
+    return 1
+  fi
 
-k8s_wait_for_crd(){
-  CRD=${1}
-  until kubectl get crd "${CRD}" >/dev/null 2>&1
-    do sleep 1
+  until_true oc apply -k "${1}" 2>/dev/null
+}
+
+until_true(){
+  echo "Running:" "${@}"
+  until "${@}" 1>&2
+  do
+    echo "again..."
+    sleep 20
   done
+
+  echo "[OK]"
 }
 
 ocp_control_nodes_not_schedulable(){
@@ -216,40 +216,11 @@ ocp_aws_cluster_autoscaling(){
   ocp_scale_machineset 1 "${WORKER_MS}"
 }
 
-################ macro functions ################
-
 setup_operator_devspaces(){
-  # setup devspaces operator
-  oc apply -k components/operators/devspaces/operator/overlays/stable
-  k8s_wait_for_crd checlusters.org.eclipse.che
-  k8s_wait_for_crd devworkspaceoperatorconfigs.controller.devfile.io
-  oc apply -k components/operators/devspaces/instance/overlays/timeout-12m
+  apply_firmly components/operators/devspaces/aggregate/overlays/default
 }
 
-setup_operator_nfd(){
-  # setup nfd operator
-  oc apply -k components/operators/nfd/operator/overlays/stable
-  k8s_wait_for_crd nodefeaturediscoveries.nfd.openshift.io
-  oc apply -k components/operators/nfd/instance/overlays/only-nvidia
-}
-
-setup_operator_nvidia(){
-  # setup nvidia gpu operator
-  oc apply -k components/operators/gpu-operator-certified/operator/overlays/stable
-  k8s_wait_for_crd clusterpolicies.nvidia.com
-  oc apply -k components/operators/gpu-operator-certified/instance/overlays/time-slicing-2
-}
-
-setup_operator_pipelines(){
-  # setup tekton operator
-  oc apply -k components/operators/openshift-pipelines-operator-rh/operator/overlays/latest
-  k8s_wait_for_crd pipelines.tekton.dev
-}
-
-setup_namespaces(){
-  # setup namespaces
-  oc apply -k components/configs/namespaces/overlays/default
-}
+################ demo functions ################
 
 check_cluster_version(){
   OCP_VERSION=$(oc version | sed -n '/Server Version: / s/Server Version: //p')
@@ -269,15 +240,24 @@ check_cluster_version(){
   fi
 }
 
-################ demo functions ################
+################## main area ###################
+
+usage(){
+  # tell us something useful
+  echo "
+  Run the following to setup autoscaling in AWS:  
+  . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
+
+  Run the following to setup devspaces:
+  . scripts/bootstrap.sh && setup_operator_devspaces
+
+  "
+}
 
 setup_demo(){
+  check_shell
   check_cluster_version
-  setup_operator_nfd
-  setup_operator_nvidia
-  nvidia_setup_dashboard_monitor
-  nvidia_setup_dashboard_admin
-  setup_namespaces
+  apply_firmly components
   usage
 }
 

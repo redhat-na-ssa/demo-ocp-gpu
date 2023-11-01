@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  demo: demo-ocp-gpu
+
+resources:
+  # setup nfd operator
+  - operators/nfd/operator/overlays/stable
+  - operators/nfd/instance/overlays/only-nvidia
+
+  # setup nvidia gpu operator
+  - operators/gpu-operator-certified/operator/overlays/stable
+  - operators/gpu-operator-certified/instance/overlays/time-sliced-2
