@@ -56,33 +56,24 @@ ocp_check_info(){
   sleep "${SLEEP_SECONDS:-8}"
 }
 
+apply_firmly(){
+  if [ ! -f "${1}/kustomization.yaml" ]; then
+    echo "Please provide a dir with \"kustomization.yaml\""
+    return 1
+  fi
+
+  until_true oc apply -k "${1}" 2>/dev/null
+}
+
 until_true(){
   echo "Running:" "${@}"
-  until "${@}"
+  until "${@}" 1>&2
   do
-    sleep 1
-    echo "and again..."
+    echo "again..."
+    sleep 20
   done
 
   echo "[OK]"
-}
-
-fake_argocd(){
-  if [ ! -f "${1}/kustomization.yaml" ]; then
-    echo "Please provide a dir with \"kustomization.yaml\""
-    return
-  fi
-
-  until_true oc apply -k "${1}"
-}
-
-which oc >/dev/null && alias kubectl=oc
-
-k8s_wait_for_crd(){
-  CRD=${1}
-  until kubectl get crd "${CRD}" >/dev/null 2>&1
-    do sleep 1
-  done
 }
 
 ocp_control_nodes_not_schedulable(){
@@ -225,6 +216,10 @@ ocp_aws_cluster_autoscaling(){
   ocp_scale_machineset 1 "${WORKER_MS}"
 }
 
+setup_operator_devspaces(){
+  apply_firmly components/operators/devspaces/aggregate/overlays/default
+}
+
 ################ demo functions ################
 
 check_cluster_version(){
@@ -245,19 +240,6 @@ check_cluster_version(){
   fi
 }
 
-usage(){
-  echo "
-  Run the following to setup autoscaling in AWS:
-  
-  . scripts/bootstrap.sh && ocp_aws_cluster_autoscaling
-
-  Run the following to setup devspaces:
-
-  . scripts/bootstrap.sh && setup_operator_devspaces
-
-  "
-}
-
 ################## main area ###################
 
 usage(){
@@ -275,7 +257,7 @@ usage(){
 setup_demo(){
   check_shell
   check_cluster_version
-  fake_argocd components
+  apply_firmly components
   usage
 }
 

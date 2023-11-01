@@ -5,17 +5,10 @@ commonLabels:
   demo: demo-ocp-gpu
 
 resources:
-  # setup devspaces operator
-  - ../components/operators/devspaces/operator/overlays/stable
-  - ../components/operators/devspaces/instance/overlays/timeout-12m
-
   # setup nfd operator
   - operators/nfd/operator/overlays/stable
   - operators/nfd/instance/overlays/only-nvidia
 
   # setup nvidia gpu operator
   - operators/gpu-operator-certified/operator/overlays/stable
-  - operators/gpu-operator-certified/instance/overlays/time-slicing-4
-
-  # setup namespaces
-  - configs/namespaces/overlays/default
+  - operators/gpu-operator-certified/instance/overlays/time-sliced-2
