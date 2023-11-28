@@ -18,7 +18,7 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     dnf install -y bash curl diffutils git git-lfs iproute \
                     jq less lsof man nano procps p7zip p7zip-plugins \
                     perl-Digest-SHA net-tools openssh-clients \
-                    pigz rsync socat screen sudo time tree vim wget xz zip && \
+                    pigz rsync socat screen sudo time vim wget xz zip && \
                   dnf clean all && \
                   rm -rf /var/cache/yum/*
 
