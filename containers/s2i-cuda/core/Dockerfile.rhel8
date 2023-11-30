@@ -56,6 +56,9 @@ RUN INSTALL_PKGS="bsdtar \
 # Copy extra files to the image.
 COPY ./core/root/ /
 
+# Copy custom entrypoint
+COPY ./core/container-entrypoint /usr/bin
+
 # Directory with the sources is set as the working directory so all STI scripts
 # can execute relative to this path.
 WORKDIR ${HOME}
