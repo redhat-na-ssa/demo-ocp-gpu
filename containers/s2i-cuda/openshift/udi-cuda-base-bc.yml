@@ -7,7 +7,7 @@ spec:
   source:
     type: Git
     git:
-      uri: 'https://https://github.com/sclorg/s2i-base-container.git'
+      uri: 'https://github.com/sclorg/s2i-base-container.git'
       ref: master
     contextDir: /base
   strategy:
@@ -16,7 +16,7 @@ spec:
       dockerfilePath: Dockerfile.rhel8
       from:
         kind: ImageStreamTag
-        name: 'cuda:11.8.0-cudnn8-devel-ubi8-core'
+        name: 's2i-cuda:11.8.0-cudnn8-devel-ubi8-core'
   output:
     to:
       kind: ImageStreamTag

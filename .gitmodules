@@ -1,3 +1,6 @@
 [submodule "containers/s2i-cuda/common"]
 	path = containers/s2i-cuda/common
 	url = https://github.com/sclorg/container-common-scripts
+[submodule "containers/s2i-base"]
+	path = containers/s2i-base
+	url = https://github.com/sclorg/s2i-base-container.git
