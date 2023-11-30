@@ -6,8 +6,8 @@ name: Publish S2I Build 11.8.0
 # documentation.
 
 on:  # yamllint disable-line rule:truthy
-  # schedule:
-  #   - cron: '5 4 * * 6'
+  schedule:
+    - cron: '5 4 * * 2'
   push:
     branches: ["*"]
     # Publish semver tags as releases.
