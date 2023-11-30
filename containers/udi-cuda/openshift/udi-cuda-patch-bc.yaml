@@ -4,7 +4,7 @@ metadata:
   name: udi-cuda-patch
   annotations:
     app.openshift.io/vcs-ref: main
-    app.openshift.io/vcs-uri: https://github.com/redhat-na-ssa/demo-ocp-gpt2-keras-nlp.git
+    app.openshift.io/vcs-uri: https://github.com/redhat-na-ssa/demo-ocp-gpu.git
   labels:
     app.openshift.io/runtime: python
     app.openshift.io/runtime-version: 3.11-ubi8
