@@ -75,7 +75,7 @@ jobs:
         uses: docker/build-push-action@v5.0.0
         with:
           context: containers/${{ steps.prep.outputs.name }}
-          file: containers/${{ steps.prep.outputs.name }}/core/Dockerfile.rhel8
+          file: core/Dockerfile.rhel8
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
             TARGETARCH=amd64
