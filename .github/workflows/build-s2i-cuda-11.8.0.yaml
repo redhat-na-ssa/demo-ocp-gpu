@@ -81,7 +81,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
             TARGETARCH=amd64
-          tags: ubi8/s2i-core:${{ steps.prep.outputs.tags }}-cudnn8-runtime-ubi8-core
+          tags: ubi8/s2i-core:latest,${{ steps.prep.outputs.tags }}-cudnn8-runtime-ubi8-core
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn8-runtime-ubi8-core
 
       # https://github.com/docker/build-push-action
