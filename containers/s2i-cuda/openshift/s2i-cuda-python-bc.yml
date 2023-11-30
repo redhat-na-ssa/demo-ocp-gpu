@@ -2,7 +2,7 @@
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
-  name: s2i-cuda-base
+  name: s2i-python-cuda
 spec:
   source:
     type: Git
