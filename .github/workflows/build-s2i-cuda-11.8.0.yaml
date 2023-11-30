@@ -108,5 +108,5 @@ jobs:
           build-args: |
             IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}:${{ steps.prep.outputs.version }}-cudnn8-devel-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn8-devel-ubi8
+          tags: ${{ steps.prep.outputs.tags }}-cudnn8-devel-ubi8,${{ steps.prep.outputs.ghcr_image }}:latest
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn8-runtime-ubi8
