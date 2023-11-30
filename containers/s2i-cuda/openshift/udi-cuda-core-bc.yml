@@ -7,7 +7,8 @@ spec:
   source:
     type: Git
     git:
-      uri: 'https://github.com/edhat-na-ssa/demo-ocp-gpu.git'
+      uri: 'https://github.com/redhat-na-ssa/demo-ocp-gpu.git'
+      ref: s2i-cuda
     contextDir: /containers/s2i-cuda/core
   strategy:
     type: Docker

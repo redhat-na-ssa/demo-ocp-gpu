@@ -8,6 +8,7 @@ spec:
     type: Git
     git:
       uri: 'https://https://github.com/sclorg/s2i-base-container.git'
+      ref: master
     contextDir: /base
   strategy:
     type: Docker
