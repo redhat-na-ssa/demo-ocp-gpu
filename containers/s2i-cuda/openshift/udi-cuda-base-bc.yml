@@ -7,15 +7,15 @@ spec:
   source:
     type: Git
     git:
-      uri: 'https://github.com/edhat-na-ssa/demo-ocp-gpu.git'
-    contextDir: /containers/s2i-cuda/ubi8
+      uri: 'https://https://github.com/sclorg/s2i-base-container.git'
+    contextDir: /base
   strategy:
     type: Docker
     dockerStrategy:
-      dockerfilePath: Dockerfile
+      dockerfilePath: Dockerfile.rhel8
       from:
         kind: ImageStreamTag
-        name: 'cuda:11.8.0-cudnn8-devel-ubi8'
+        name: 'cuda:11.8.0-cudnn8-devel-ubi8-core'
   output:
     to:
       kind: ImageStreamTag
