@@ -5,7 +5,7 @@ Setup Nvidia GPUs on OpenShift with ease. This repo is intended as a foundation 
 Initially `bootstrap.sh` configures GPU time-slicing which allows 2 workloads
 to share a single GPU.
 
-### In addition
+## In addition
 
 - Try out GPUs in OpenShift Dev Spaces via this [devfile.yaml](devfile.yaml)
 - Run [jupyter notebooks](notebooks) with [pytorch](notebooks/00-test-gpu-torch.ipynb)
@@ -22,10 +22,12 @@ Familiarity with Kustomize will be helpful. This folder contains various ~~secre
 - AWS (auto scaling, optional)
 - OpenShift Dev Spaces 3.8.0+ (optional)
 
-[Red Hat Demo Platform](https://demo.redhat.com) Catalog (RHDP) options:
+[Red Hat Demo Platform](https://demo.redhat.com) Options (Tested)
 
-- `MLOps Demo: Data Science & Edge Practice`
-- `Red Hat OpenShift Container Platform 4 Demo`
+- <a href="https://demo.redhat.com/catalog?item=babylon-catalog-prod/sandboxes-gpte.sandbox-ocp.prod&utm_source=webapp&utm_medium=share-link" target="_blank">AWS with OpenShift Open Environment</a>
+  - 1 x Control Plane - `m5.4xlarge`
+  - 0 x Workers - `m5.2xlarge`
+- <a href="https://demo.redhat.com/catalog?item=babylon-catalog-prod/community-content.com-mlops-wksp.prod&utm_source=webapp&utm_medium=share-link" target="_blank">MLOps Demo: Data Science & Edge Practice</a>
 
 ## Quickstart
 
@@ -89,7 +91,7 @@ Watch cluster autoscaler logs
 oc -n openshift-machine-api logs -f deploy/cluster-autoscaler-default
 ```
 
-Manually label nodes as GPU
+Manually label nodes as GPU (optional)
 
 ```
 NODE=worker1.ocp.run
@@ -116,7 +118,7 @@ NODE=worker1.ocp.run
 
 ## Container License
 
-`udi-cuda` images from [HERE](https://github.com/redhat-na-ssa/demo-ocp-gpu/pkgs/container/udi-cuda) are based on [official NVIDIA CUDA images](https://hub.docker.com/r/nvidia/cuda). 
+`udi-cuda` images from [HERE](https://github.com/redhat-na-ssa/demo-ocp-gpu/pkgs/container/udi-cuda) are based on [official NVIDIA CUDA images](https://hub.docker.com/r/nvidia/cuda).
 
 Please be aware of any of the associated terms and conditions.
 
