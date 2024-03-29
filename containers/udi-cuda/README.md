@@ -23,13 +23,13 @@ podman build . \
 
 # local build - runtime
 podman build . \
-  -t udi-cuda:12.2.0-runtime-ubi8 \
-  --build-arg IMAGE_NAME=docker.io/nvidia/cuda:12.2.0-runtime-ubi8
+  -t udi-cuda:12.3.2-cudnn9-runtime-ubi8 \
+  --build-arg IMAGE_NAME=docker.io/nvidia/cuda:12.3.2-cudnn9-runtime-ubi8
 
 # local build - devel
 podman build . \
-  -t udi-cuda:12.2.0-devel-ubi8 \
-  --build-arg IMAGE_NAME=docker.io/nvidia/cuda:12.2.0-devel-ubi8
+  -t udi-cuda:12.3.2-cudnn9-devel-ubi8 \
+  --build-arg IMAGE_NAME=docker.io/nvidia/cuda:12.3.2-cudnn9-devel-ubi8
 ```
 
 ## Links
