@@ -22,3 +22,5 @@ rules:
 
 ignore:
   - "scratch/*"
+  - "containers/s2i-base/*"
+  - "containers/s2i-cuda/common/*"

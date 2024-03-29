@@ -18,5 +18,5 @@ matrix:
           - code
           - pre
     sources:
-      - '**/*.md|!venv/**'
+      - '**/*.md|!venv/**|!containers/s2i-cuda/common/**|!containers/s2i-base/**'
     default_encoding: utf-8
