@@ -30,11 +30,11 @@ main-build:
 
 
 build-s2i-cuda-11:
-	cd containers/s2i-cuda/core; \
+	cd containers/s2i-cuda; \
 	$(CONTAINER_CMD) build \
 	-t $(REGISTRY)/$(RUSER)/udi-cuda:11.8.0-cudnn8-runtime-ubi8 \
 	--build-arg IMAGE_NAME=docker.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubi8 \
-	$(CONTAINER_BUILD_CONTEXT) -f $(CONTAINER_FILE_PATH).rhel8
+	$(CONTAINER_BUILD_CONTEXT) -f core/$(CONTAINER_FILE_PATH).rhel8
 
 build-udi-cuda-11:
 	cd containers/udi-cuda/ubi8; \
