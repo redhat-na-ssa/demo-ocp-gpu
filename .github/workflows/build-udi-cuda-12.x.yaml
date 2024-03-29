@@ -106,7 +106,7 @@ jobs:
           build-args: |
             IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}:${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn9-devel-ubi8-python39,${{ steps.prep.outputs.ghcr_image }}:latest
+          tags: ${{ steps.prep.outputs.tags }}-cudnn9-devel-ubi8-python39
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8-python39
 
       # https://github.com/docker/build-push-action
@@ -119,5 +119,5 @@ jobs:
           build-args: |
             IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}:${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn9-devel-ubi8-python311
+          tags: ${{ steps.prep.outputs.tags }}-cudnn9-devel-ubi8-python311,${{ steps.prep.outputs.ghcr_image }}:latest
           labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8-python311
