@@ -30,7 +30,7 @@ RUN yum install -y libGL bash-completion && \
 
 # install: oc,tkn
 # todo: install cli tools during env init / not in container
-ARG OC4_URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux.tar.gz"
+ARG OC4_URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux-amd64-rhel8.tar.gz"
 ARG TKN_URL="https://mirror.openshift.com/pub/openshift-v4/clients/pipeline/latest/tkn-linux-amd64.tar.gz"
 
 RUN curl -sL "${OC4_URL}" | \
