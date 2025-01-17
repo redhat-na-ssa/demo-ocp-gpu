@@ -78,10 +78,10 @@ jobs:
           file: containers/${{ steps.prep.outputs.name }}/ubi8/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn9-runtime-ubi8
+            IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn-runtime-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn9-runtime-ubi8
-          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn9-runtime-ubi8
+          tags: ${{ steps.prep.outputs.tags }}-cudnn-runtime-ubi8
+          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn-runtime-ubi8
 
       # https://github.com/docker/build-push-action
       - name: Build and push devel
@@ -91,10 +91,10 @@ jobs:
           file: containers/${{ steps.prep.outputs.name }}/ubi8/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8
+            IMAGE_NAME=docker.io/nvidia/cuda:${{ steps.prep.outputs.version }}-cudnn-devel-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn9-devel-ubi8
-          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8
+          tags: ${{ steps.prep.outputs.tags }}-cudnn-devel-ubi8
+          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn-devel-ubi8
 
       # https://github.com/docker/build-push-action
       - name: Build and push devel python 3.9
@@ -104,10 +104,10 @@ jobs:
           file: containers/python/ubi8/3.9/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}:${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8
+            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}:${{ steps.prep.outputs.version }}-cudnn-devel-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn9-devel-ubi8-python39
-          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8-python39
+          tags: ${{ steps.prep.outputs.tags }}-cudnn-devel-ubi8-python39
+          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn-devel-ubi8-python39
 
       # https://github.com/docker/build-push-action
       - name: Build and push devel python 3.11
@@ -117,7 +117,7 @@ jobs:
           file: containers/python/ubi8/3.11/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}:${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8
+            IMAGE_NAME=${{ steps.prep.outputs.ghcr_image }}:${{ steps.prep.outputs.version }}-cudnn-devel-ubi8
             TARGETARCH=amd64
-          tags: ${{ steps.prep.outputs.tags }}-cudnn9-devel-ubi8-python311,${{ steps.prep.outputs.ghcr_image }}:latest
-          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn9-devel-ubi8-python311
+          tags: ${{ steps.prep.outputs.tags }}-cudnn-devel-ubi8-python311,${{ steps.prep.outputs.ghcr_image }}:latest
+          labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}-cudnn-devel-ubi8-python311
