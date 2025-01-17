@@ -24,7 +24,7 @@ on:  # yamllint disable-line rule:truthy
 
 env:
   IMAGE_NAME: udi-cuda
-  IMAGE_VERSION: 12.3.2
+  IMAGE_VERSION: 12.6.3
   GHCR_REGISTRY: ghcr.io
   GHCR_USER: ${{ github.repository_owner }}
   GHCR_IMAGE: ${GHCR_REGISTRY}/${GHCR_USER}/${IMAGE_NAME}
