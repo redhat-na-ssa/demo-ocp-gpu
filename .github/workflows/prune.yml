@@ -1,0 +1,23 @@
+name: Prune Packages
+on:  # yamllint disable-line rule:truthy
+  schedule:
+    - cron: "0 0 * * *"  # every day at midnight, utc
+  push:
+    branches:
+      - "main"
+
+jobs:
+  delete-package-versions:
+    permissions:
+      contents: read
+      packages: write
+    name: Delete untagged package versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: snok/container-retention-policy@v3.0.0
+        with:
+          account: user
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image-names: "udi-cuda s2i-cuda"  # all packages owned by the account
+          tag-selection: untagged
+          cut-off: 1h
