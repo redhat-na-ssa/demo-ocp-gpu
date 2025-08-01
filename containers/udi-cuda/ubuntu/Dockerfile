@@ -1,11 +1,14 @@
 # syntax=docker/dockerfile:1.3-labs
-ARG IMAGE_NAME=docker.io/nvidia/cuda:12.9.1-cudnn-devel-ubuntu24.04
+#
+# The CUDA version should match the Openshift worker node.
+#
+ARG IMAGE_NAME=docker.io/nvidia/cuda:12.4.1-cudnn-devel-ubuntu24.04
 
 # hadolint ignore=DL3006
 FROM ${IMAGE_NAME}
 
 # The FROM statement defines a new scope
-ARG CUDA_VERSION="12-9"
+ARG CUDA_VERSION="12-4"
 ARG V1="${CUDA_VERSION//./-}"
 ARG CUDA_NSIGHT_VERSION=${V1%-*}
 
