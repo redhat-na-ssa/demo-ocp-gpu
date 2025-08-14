@@ -12,6 +12,10 @@ ARG CUDA_VERSION="12-4"
 ARG V1="${CUDA_VERSION//./-}"
 ARG CUDA_NSIGHT_VERSION=${V1%-*}
 
+# Set the build to be non-interactive so it does not prompt for the timezone info.
+ENV TZ=America/New_York
+ENV DEBIAN_FRONTEND=noninteractive
+
 # cherry picked from below
 # https://github.com/devfile/developer-images/blob/main/base/ubi8/Dockerfile
 
@@ -27,7 +31,7 @@ RUN apt update && \
 
 # install: other bins
 
-RUN apt install -y bash-completion cuda-nsight-systems-${CUDA_NSIGHT_VERSION} && \
+RUN apt install -y bash-completion cuda-nsight-systems-${CUDA_NSIGHT_VERSION} libopencv-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # install: oc,tkn
