@@ -1,6 +1,7 @@
 # custom excludes
 scratch/
 dcgm-exporter-dashboard.json
+dictionary.dic
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
