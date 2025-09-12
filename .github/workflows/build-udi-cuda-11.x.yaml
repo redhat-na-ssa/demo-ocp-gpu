@@ -21,6 +21,7 @@ on:  # yamllint disable-line rule:truthy
     paths:
       - "containers/udi-cuda/ubi8/**"
       - "containers/python/ubi8/**"
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: udi-cuda
