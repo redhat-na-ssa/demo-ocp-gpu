@@ -7,13 +7,14 @@ Red Hat Demo Platform Catalog (RHDP) option:
 *MIG demo is currently a WIP for RHDP and likely will NOT work*
 
 Error message
-```
+
+```sh
 error launching instance: You have requested more vCPU capacity than your
 current vCPU limit of 64 allows for the instance bucket that the specified
 instance type belongs to. 
 ```
 
-### AWS Notes
+## AWS Notes
 
 AWS type `p4d.24xlarge` is currently only in availability zone `us-east-2b` and has 96 vCPU.
 
@@ -35,7 +36,7 @@ Setup MIG single mode.
 - Profile: 1 GPU and 5GB of memory
 - Resource: `nvidia.com/gpu: 1`
 
-```
+```sh
 . scripts/bootstrap.sh
 
 nvidia_setup_mig_config single all-1g.5gb
@@ -45,7 +46,7 @@ nvidia_setup_mig_config single all-1g.5gb
 
 Setup MIG profile
 
-```
+```sh
 . scripts/bootstrap.sh
 
 # setup MIG single
@@ -60,7 +61,7 @@ nvidia_setup_mig_config mixed all-balanced
 
 Manually Pick MIG profile
 
-```
+```sh
 # mode = single / mixed
 MIG_CONFIG=all-1g.5gb
 MIG_CONFIG=all-2g.10gb
@@ -71,7 +72,7 @@ MIG_CONFIG=all-balanced
 
 Manually apply MIG partitioning profile(s) - Mixed
 
-```
+```sh
 # add profile label
 oc label node --overwrite \
   -l "node-role.kubernetes.io/gpu" \
