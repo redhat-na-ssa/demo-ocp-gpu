@@ -18,7 +18,7 @@ Familiarity with Kustomize will be helpful. This folder contains various ~~secre
 
 - Nvidia GPU hardware or cloud provider with GPU instances
 - OpenShift 4.11+ w/ cluster admin
-- [Internet access](TODO.md)
+- [Internet access](docs/TODO.md)
 - AWS (auto scaling, optional)
 - OpenShift Dev Spaces 3.8.0+ (optional)
 
@@ -100,7 +100,7 @@ NODE=worker1.ocp.run
 
 ## Other Instructions
 
-[Nvidia Multi Instance GPU (MIG) on OpenShift](MIG.md)
+[Nvidia Multi Instance GPU (MIG) on OpenShift](docs/MIG.md)
 
 ## Links
 
